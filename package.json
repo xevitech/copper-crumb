@@ -26,6 +26,7 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
+        "dotenv": "^16.4.7",
         "moment": "^2.29.1",
         "v-select2-component": "^0.4.7",
         "vue-lodash": "^2.1.2",

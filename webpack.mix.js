@@ -1,4 +1,8 @@
+require('dotenv').config();
 const mix = require('laravel-mix');
+
+
+const baseUrl = process.env.APP_URL || 'http://localhost';
 
 
 
@@ -8,6 +12,6 @@ const mix = require('laravel-mix');
 mix.js('resources/js/app.js', 'public/js').webpackConfig({
     output: {
         chunkFilename: 'js/chunks/[name].js?id=[chunkhash]',
-        publicPath: '/',
+        publicPath: `${baseUrl}/public/`,
     }
 }).version().vue();

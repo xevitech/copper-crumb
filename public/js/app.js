@@ -50574,7 +50574,9 @@ function h(tag, key, args) {
 /******/ 	
 /******/ 	/* webpack/runtime/publicPath */
 /******/ 	(() => {
-/******/ 		__webpack_require__.p = "http://localhost/copper-crumb-clone/public/";
+// /******/ 		__webpack_require__.p = "http://localhost/copper-crumb-clone/public/";
+                const baseUrl = process.env.APP_URL || 'http://localhost';  // Default to localhost
+                __webpack_require__.p = `${baseUrl}/public/`;
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */

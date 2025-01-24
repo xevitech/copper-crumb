@@ -1984,7 +1984,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.list-image[data-v-30694f59] {\n    height: 100px;\n    -o-object-fit: cover;\n       object-fit: cover;\n    -o-object-position: center;\n       object-position: center;\n}\n.product-item[data-v-30694f59]:hover {\n    cursor: pointer;\n}\n.modal-footer[data-v-30694f59] {\n    display: -ms-flexbox;\n    display: block;\n    align-items: center;\n    justify-content: flex-end;\n    padding: 1rem;\n    border-top: 1px solid #dee2e6;\n    border-bottom-right-radius: 0.3rem;\n    border-bottom-left-radius: 0.3rem;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.list-image[data-v-30694f59] {\r\n    height: 100px;\r\n    -o-object-fit: cover;\r\n       object-fit: cover;\r\n    -o-object-position: center;\r\n       object-position: center;\n}\n.product-item[data-v-30694f59]:hover {\r\n    cursor: pointer;\n}\n.modal-footer[data-v-30694f59] {\r\n    display: -ms-flexbox;\r\n    display: block;\r\n    align-items: center;\r\n    justify-content: flex-end;\r\n    padding: 1rem;\r\n    border-top: 1px solid #dee2e6;\r\n    border-bottom-right-radius: 0.3rem;\r\n    border-bottom-left-radius: 0.3rem;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

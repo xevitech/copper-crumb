@@ -43,4 +43,6 @@ Route::prefix('v1')->group(function () {
     Route::get('category-product/{id}',[FrontendController::class, 'getProductByCategory']);
     Route::get('categories',[FrontendController::class, 'getAllCategories']);
     Route::post('validate-coupon',[FrontendController::class, 'validateCoupon']);
+
+    Route::get('popular-products',[FrontendController::class,'popularProducts']);
 });

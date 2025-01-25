@@ -5,11 +5,12 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
-use App\Models\{Customer,ProductCategory,CouponProduct,Coupon,Cart};
+use App\Models\{Customer,ProductCategory,CouponProduct,Coupon,Cart,InvoiceItem};
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
 
 class FrontendController extends Controller
 {
@@ -207,25 +208,31 @@ class FrontendController extends Controller
         $coupon_discount = $request->input('coupon_discount');
         $amount = $request->input('amount');
 
-
-        if($productId>0 && $quantity>0){
-            $cartId = Cart::where('customer_id', $userId)->where('product_id',$productId)->pluck('id')->first();
-            if($cartId){
-                $cart = Cart::find($cartId);
-                $cart->quantity += $quantity;
-                $cart->save();
-            }else{
-                // dd($coupon_discount,$amount);
-                $cart = Cart::Create(
-                    [
-                        'customer_id' => $userId,
-                        'product_id' => $productId,
-                        'quantity' => $quantity,
-                        'coupon_discount' => $coupon_discount,
-                        'amount' => $amount,
-                    ],
-                );
+        $cartId = Cart::where('customer_id', $userId)->where('product_id',$productId)->pluck('id')->first();
+        if($cartId){
+            $cart = Cart::find($cartId);
+            $cart->quantity += $quantity;
+            if($coupon_discount){
+                $cart->coupon_discount = $coupon_discount;
             }
+            $cart->save();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Cart Updated!',
+                'cart' => $cart,
+            ], 200);
+
+        }else{
+            $cart = Cart::Create(
+                [
+                    'customer_id' => $userId,
+                    'product_id' => $productId,
+                    'quantity' => $quantity,
+                    'coupon_discount' => $coupon_discount,
+                    'amount' => $amount,
+                ],
+            );
             return response()->json([
                 'status' => 'success',
                 'message' => 'Product added to cart.',
@@ -234,7 +241,7 @@ class FrontendController extends Controller
         }
         return response()->json([
             'status' => 'false',
-            'message' => 'Failed to add product',
+            'message' => 'Something went wrong!',
         ], 201);
     }
 
@@ -273,5 +280,29 @@ class FrontendController extends Controller
                 'message' => 'Cart item not found.'
             ], 201);
         }
+    }
+
+    public function popularProducts()
+    {
+        $most_sale_ids = InvoiceItem::select(DB::raw('product_id, sum(quantity) as total'))
+                ->groupBy('product_id')
+                ->orderBy('total', 'DESC')
+                ->limit(5)
+                ->pluck('product_id');
+
+        $data = Product::whereIn('id', $most_sale_ids)->where('status','active')->get();
+        if($data){
+            return response()->json([
+                'status' => 'success',
+                'products' => $data
+            ]);
+        }else{
+            return response()->json([
+                'status' => 'false',
+                'message' => 'No record found'
+            ]);
+        }
+        
+
     }
 }

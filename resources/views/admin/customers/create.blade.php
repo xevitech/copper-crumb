@@ -52,8 +52,8 @@
 
                         <div class="form-group col-sm-6">
                             <label for="">{{__('custom.phone')}} <span class="error">*</span></label>
-                            <input type="text" name="phone" class="form-control phone"
-                                value="{{ old('phone') ?? '+1' }}" required>
+                            <input type="text" name="phone" class="form-control"
+                                value="{{ old('phone')}}" placeholder="+91" required>
                             @error('phone')
                             <p class="error">{{ $message }}</p>
                             @enderror
@@ -61,7 +61,7 @@
                         <div class="form-group col-sm-6">
                             <label>{{ __('custom.password') }} <span class="error">*</span></label>
                             <input type="password" name="password" class="form-control" required
-                                   placeholder="Enter password">
+                                   placeholder="Enter password" required>
 
                             @error('password')
                             <p class="error">{{ $message }}</p>
@@ -70,7 +70,7 @@
                         <div class="form-group col-sm-6">
                             <label>{{ __('custom.confirm_password') }} <span class="error">*</span></label>
                             <input type="password" name="password_confirmation" class="form-control" required
-                                   placeholder="Type password again">
+                                   placeholder="Type password again" required>
 
                             @error('password_confirmation')
                             <p class="error">{{ $message }}</p>
@@ -117,7 +117,7 @@
                                 <div class="col-lg-6">
                                     <div class="form-group ic-select-gray-bg">
                                         <label for="#">{{ __('custom.country') }} </label>
-                                        <select id="country" name="country" class="form-control select2" >
+                                        {{-- <select id="country" name="country" class="form-control select2" >
                                             <option value="">{{ __('custom.select') }} {{ __('custom.country') }}
                                             </option>
                                             @foreach($countries as $country)
@@ -125,7 +125,9 @@
                                                 {{ $country->name }}
                                             </option>
                                             @endforeach
-                                        </select>
+                                        </select> --}}
+                                        <input type="text" name="country" class="form-control"
+                                        value="{{ old('country') }}">
                                         @error('country')
                                         <p class="error">{{ $message }}</p>
                                         @enderror
@@ -134,9 +136,11 @@
                                 <div class="col-lg-6">
                                     <div class="form-group ic-select-gray-bg">
                                         <label for="#">{{ __('custom.state') }} </label>
-                                        <select id="state" name="state" class="form-control select2" >
+                                        {{-- <select id="state" name="state" class="form-control select2" >
                                             <option value="">{{ __('custom.select') }} {{ __('custom.state') }}</option>
-                                        </select>
+                                        </select> --}}
+                                        <input type="text" name="state" class="form-control"
+                                        value="{{ old('state') }}">
 
                                         @error('state')
                                         <p class="error">{{ $message }}</p>
@@ -146,9 +150,11 @@
                                 <div class="col-lg-6">
                                     <div class="form-group ic-select-gray-bg">
                                         <label for="#">{{ __('custom.city') }}</label>
-                                        <select id="city" name="city" class="form-control select2">
+                                        {{-- <select id="city" name="city" class="form-control select2">
                                             <option value="">{{ __('custom.select') }} {{ __('custom.city') }}</option>
-                                        </select>
+                                        </select> --}}
+                                        <input type="text" name="city" class="form-control"
+                                        value="{{ old('city') }}">
 
                                         @error('city')
                                         <p class="error">{{ $message }}</p>
@@ -249,7 +255,7 @@
                                 <div class="col-lg-6">
                                     <div class="form-group ic-select-gray-bg">
                                         <label for="#">{{ __('custom.country') }}</label>
-                                        <select id="country2" name="b_country" class="form-control select2">
+                                        {{-- <select id="country2" name="b_country" class="form-control select2">
                                             <option value="">{{ __('custom.select') }} {{ __('custom.country') }}
                                             </option>
                                             @foreach($countries as $country)
@@ -257,7 +263,9 @@
                                                 {{ $country->name }}
                                             </option>
                                             @endforeach
-                                        </select>
+                                        </select> --}}
+                                        <input type="text" name="b_country" class="form-control"
+                                        value="{{ old('b_country') }}">
                                         @error('b_country')
                                         <p class="error">{{ $message }}</p>
                                         @enderror
@@ -266,9 +274,11 @@
                                 <div class="col-lg-6">
                                     <div class="form-group ic-select-gray-bg">
                                         <label for="#">{{ __('custom.state') }}</label>
-                                        <select id="state2" name="b_state" class="form-control select2">
+                                        {{-- <select id="state2" name="b_state" class="form-control select2">
                                             <option value="">{{ __('custom.select') }} {{ __('custom.state') }}</option>
-                                        </select>
+                                        </select> --}}
+                                        <input type="text" name="b_state" class="form-control"
+                                        value="{{ old('b_state') }}">
 
                                         @error('b_state')
                                         <p class="error">{{ $message }}</p>
@@ -277,10 +287,14 @@
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group ic-select-gray-bg">
-                                        <label for="#"> {{ __('custom.city') }}</label> <select id="city2" name="b_city"
+                                        <label for="#"> {{ __('custom.city') }}</label> 
+                                        {{-- <select id="city2" name="b_city"
                                             class="form-control select2">
                                             <option value="">{{ __('custom.select') }} {{ __('custom.city') }}</option>
-                                        </select>
+                                        </select> --}}
+
+                                        <input type="text" name="b_city" class="form-control"
+                                        value="{{ old('b_city') }}">
 
                                         @error('b_city')
                                         <p class="error">{{ $message }}</p>
@@ -290,7 +304,7 @@
                                 <div class="form-group col-sm-6">
                                     <label for="">{{__('custom.zipcode')}}</label>
                                     <input type="number" name="b_zipcode" class="form-control"
-                                        maxlength="12" value="{{ old('b_zipcode') }}">
+                                        maxlength="6" value="{{ old('b_zipcode') }}">
                                     @error('zipcode')
                                     <p class="error">{{ $message }}</p>
                                     @enderror

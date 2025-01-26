@@ -53,12 +53,13 @@
 
                         <div class="form-group col-sm-6">
                             <label for="">{{__('custom.phone')}} <span class="error">*</span></label>
-                            <input type="text" id="phone" name="phone" class="form-control phone"
-                                value="{{ $customer->phone ?? '+1' }}" required>
+                            <input type="text" id="phone" name="phone" class="form-control"
+                                value="{{ $customer->phone}}" placeholder="+91" required>
                             @error('phone')
                             <p class="error">{{ $message }}</p>
                             @enderror
                         </div>
+                        {{--
                         <div class="form-group col-sm-6">
                             <label>{{ __('custom.password') }} <span class="error">*</span></label>
                             <input type="password" name="password" class="form-control" placeholder="Enter password">
@@ -76,6 +77,7 @@
                             <p class="error">{{ $message }}</p>
                             @enderror
                         </div>
+                        --}}
 
                         <div class="form-group col-sm-6">
                             <label for="">{{__('custom.company')}} </label>
@@ -118,6 +120,7 @@
                                 <div class="col-lg-6">
                                     <div class="form-group ic-select-gray-bg">
                                         <label for="#">{{ __('custom.country') }} </label>
+                                        {{--
                                         <select id="country" name="country" class="form-control select2">
                                             <option value="">{{ __('custom.select') }} {{ __('custom.country') }}
                                             </option>
@@ -128,6 +131,9 @@
                                             </option>
                                             @endforeach
                                         </select>
+                                        --}}
+                                        <input type="text" name="country" class="form-control"
+                                        value="{{ $customer->country }}">
                                         @error('country')
                                         <p class="error">{{ $message }}</p>
                                         @enderror
@@ -136,9 +142,13 @@
                                 <div class="col-lg-6">
                                     <div class="form-group ic-select-gray-bg">
                                         <label for="#">{{ __('custom.state') }}</label>
+                                        {{--
                                         <select id="state" name="state" class="form-control select2" >
                                             <option value="">{{ __('custom.select') }} {{ __('custom.state') }}</option>
                                         </select>
+                                        --}}
+                                        <input type="text" name="state" class="form-control"
+                                        value="{{ $customer->state }}">
 
                                         @error('state')
                                         <p class="error">{{ $message }}</p>
@@ -148,9 +158,13 @@
                                 <div class="col-lg-6">
                                     <div class="form-group ic-select-gray-bg">
                                         <label for="#">{{ __('custom.city') }}</label>
+                                        {{--
                                         <select id="city" name="city" class="form-control select2">
                                             <option value="">{{ __('custom.select') }} {{ __('custom.city') }}</option>
                                         </select>
+                                        --}}
+                                        <input type="text" name="city" class="form-control"
+                                        value="{{ $customer->city }}">
 
                                         @error('city')
                                         <p class="error">{{ $message }}</p>
@@ -162,7 +176,7 @@
                                     <label for="">{{__('custom.zipcode')}} </label>
                                     <input type="number" name="zipcode" class="form-control"
                                         value="{{ $customer->zipcode }}"
-                                        maxlength="12">
+                                        maxlength="6">
                                     @error('zipcode')
                                     <p class="error">{{ $message }}</p>
                                     @enderror
@@ -228,8 +242,12 @@
 
                                 <div class="form-group col-sm-6">
                                     <label for="">{{__('custom.phone')}}</label>
+                                    {{--
                                     <input type="text" id="phone2" name="b_phone" class="form-control phone"
                                         value="{{ $customer->b_phone ?? '+1' }}">
+                                        --}}
+                                    <input type="text" id="phone2" name="b_phone" class="form-control"
+                                        value="{{ $customer->b_phone}}" placeholder="+91">
                                     @error('b_phone')
                                     <p class="error">{{ $message }}</p>
                                     @enderror
@@ -255,6 +273,7 @@
                                 <div class="col-lg-6">
                                     <div class="form-group ic-select-gray-bg">
                                         <label for="#">{{ __('custom.country') }}</label>
+                                        {{--
                                         <select id="country2" name="b_country" class="form-control select2">
                                             <option value="">{{ __('custom.select') }} {{ __('custom.country') }}
                                             </option>
@@ -265,6 +284,9 @@
                                             </option>
                                             @endforeach
                                         </select>
+                                        --}}
+                                        <input type="text" name="b_country" class="form-control"
+                                        value="{{ $customer->b_country }}">
                                         @error('b_country')
                                         <p class="error">{{ $message }}</p>
                                         @enderror
@@ -273,9 +295,13 @@
                                 <div class="col-lg-6">
                                     <div class="form-group ic-select-gray-bg">
                                         <label for="#">{{ __('custom.state') }}</label>
+                                        {{--
                                         <select id="state2" name="b_state" class="form-control select2">
                                             <option value="">{{ __('custom.select') }} {{ __('custom.state') }}</option>
                                         </select>
+                                        --}}
+                                        <input type="text" name="b_state" class="form-control"
+                                        value="{{ $customer->b_state }}">
 
                                         @error('b_state')
                                         <p class="error">{{ $message }}</p>
@@ -284,10 +310,15 @@
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group ic-select-gray-bg">
-                                        <label for="#"> {{ __('custom.city') }}</label> <select id="city2" name="b_city"
+                                        <label for="#"> {{ __('custom.city') }}</label> 
+                                        {{--
+                                        <select id="city2" name="b_city"
                                             class="form-control select2">
                                             <option value="">{{ __('custom.select') }} {{ __('custom.city') }}</option>
                                         </select>
+                                        --}}
+                                        <input type="text" name="b_city" class="form-control"
+                                        value="{{ $customer->b_city }}">
 
                                         @error('b_city')
                                         <p class="error">{{ $message }}</p>
@@ -298,7 +329,7 @@
                                     <label for="">{{__('custom.zipcode')}}</label>
                                     <input type="number" name="b_zipcode" class="form-control"
                                         value="{{ $customer->b_zipcode }}"
-                                        maxlength="12">
+                                        maxlength="6">
                                     @error('zipcode')
                                     <p class="error">{{ $message }}</p>
                                     @enderror
@@ -334,7 +365,21 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group col-sm-6">
+
+                        <div class="form-group col-sm-3">
+                            <div class="form-group ic-select-gray-bg">
+                                <label for="#"> {{ __('custom.loyalty') }}</label> 
+                                <select id="loyalty" name="loyalty" class="form-control">
+                                    <option value="10" {{ $customer->loyalty == 10 ? 'selected' : '' }}>10</option>
+                                    <option value="15" {{ $customer->loyalty == 15 ? 'selected' : '' }}>15</option>
+                                </select>
+                                @error('loyalty')
+                                <p class="error">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-3">
                             <label class="d-block mb-3">{{__('custom.status')}} <span class="error">*</span></label>
                             <div class="custom-control custom-radio custom-control-inline">
                                 <input type="radio" id="status_yes" value="{{ \App\Models\Customer::STATUS_ACTIVE }}"

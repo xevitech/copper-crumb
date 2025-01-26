@@ -119,11 +119,9 @@ class CustomersController extends Controller
     public function update(CustomerRequest $request, $id)
     {
         $data = $request->validated();
-
         if (isset($data['password']) && $data['password']) {
             $data['password'] = Hash::make($data['password']);
         }
-
         if ($this->customerService->createOrUpdateWithFile($data, 'avatar', $id)) {
             flash(__('custom.customer_updated_successful'))->success();
         } else {

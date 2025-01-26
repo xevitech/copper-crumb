@@ -18,7 +18,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        \App\Console\Commands\SendNewsletter::class,
     ];
 
     /**
@@ -54,6 +54,12 @@ class Kernel extends ConsoleKernel
             Log::info("DB uploaded");
         } catch (\Exception $ex) {
 
+        }
+
+        try {
+            $schedule->command('newsletter:send "Weekly Newsletter Content"')->weekly();
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage());
         }
 
 

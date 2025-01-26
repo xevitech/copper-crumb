@@ -45,4 +45,7 @@ Route::prefix('v1')->group(function () {
     Route::post('validate-coupon',[FrontendController::class, 'validateCoupon']);
 
     Route::get('popular-products',[FrontendController::class,'popularProducts']);
+
+    Route::post('newsletter/subscribe', [FrontendController::class, 'subscribe']);
+    Route::post('newsletter/unsubscribe', [FrontendController::class, 'unsubscribe']);
 });

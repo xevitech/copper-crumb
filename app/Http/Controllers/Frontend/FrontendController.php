@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
-use App\Models\{Customer,ProductCategory,CouponProduct,Coupon,Cart,InvoiceItem};
+use App\Models\{Customer,ProductCategory,CouponProduct,Coupon,Cart,InvoiceItem,NewsletterSubscriber};
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -304,5 +304,54 @@ class FrontendController extends Controller
         }
         
 
+    }
+
+    public function subscribe(Request $request)
+    {
+        try {
+            // Custom validation
+            $validator = Validator::make($request->all(), [
+                'email' => 'required|email|unique:newsletter_subscribers,email',
+            ]);
+
+            // If validation fails, throw an exception
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => $validator->errors(),
+                ], 422);
+            }
+
+            // Store the subscriber
+            $subscriber = NewsletterSubscriber::create([
+                'email' => $request->input('email'),
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Subscribed successfully!',
+                'data' => $subscriber,
+            ], 201);
+        } catch (\Exception $e) {
+            // Catch any other unexpected errors
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong!',
+                'error' => $e->getMessage(), // Debugging: return exception message
+            ], 500);
+        }
+    
+    }
+
+    public function unsubscribe(Request $request)
+    {
+        $validated = $request->validate([
+            'email' => 'required|email|exists:newsletter_subscribers,email',
+        ]);
+
+        $subscriber = NewsletterSubscriber::where('email', $validated['email'])->first();
+        $subscriber->update(['is_subscribed' => false]);
+
+        return response()->json(['message' => 'Unsubscribed successfully!'], 200);
     }
 }

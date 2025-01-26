@@ -113,6 +113,7 @@ class CustomerDataTable extends DataTable
             Column::make('last_name', 'last_name')->title(__('custom.last_name')),
             Column::make('email', 'email')->title(__('custom.email')),
             Column::make('phone', 'phone')->title(__('custom.phone')),
+            Column::make('loyalty', 'loyalty')->title(__('custom.loyalty')),
             Column::make('status', 'status')->title(__('custom.status')),
             Column::make('is_verified', 'is_verified')->title(__('custom.is_verified')),
         ];

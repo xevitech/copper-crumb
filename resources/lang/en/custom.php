@@ -294,6 +294,7 @@ return [
     'last_name'                          => 'Last Name',
     'company'                            => 'Company',
     'designation'                        => 'Designation',
+    'loyalty'                            => 'Loyalty(%)',
     'address_line_1'                     => 'Address Line 1',
     'address_line_2'                     => 'Address Line 2',
     'country'                            => 'Country',

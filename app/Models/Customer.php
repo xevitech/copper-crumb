@@ -55,7 +55,8 @@ class Customer extends Authenticatable
         "status",
         "is_verified",
         "created_by",
-        "updated_by"
+        "updated_by",
+        "loyalty",
     ];
     protected $hidden = [
         'password',

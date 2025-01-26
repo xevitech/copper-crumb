@@ -44,6 +44,10 @@
                                             <p class="mb-0 ic-discription-customer">
                                                 {{ __t('designation') }}: {{ $customer->designation }}
                                             </p>
+                                            <p></p>
+                                            <p class="mb-0 ic-discription-customer">
+                                               <b> {{ __t('loyalty')}}: {{$customer->loyalty}} </b>
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -80,11 +84,17 @@
                                                     : '' !!}
                                                     {!! $customer->address_line_2 ? $customer->address_line_2 .', <br>'
                                                     : '' !!}
-                                                    {!! $customer->city ? optional($customer->systemCity)->name.', ': ''
+                                                    {{-- {!! $customer->city ? optional($customer->systemCity)->name.', ': ''
+                                                    !!} --}}
+                                                    {!! $customer->city ? $customer->city.', ': ''
                                                     !!}
-                                                    {!! $customer->state ? optional($customer->systemState)->name.', ' :
+                                                    {{-- {!! $customer->state ? optional($customer->systemState)->name.', ' :
+                                                    '' !!} --}}
+                                                    {!! $customer->state ? $customer->state.', ' :
                                                     '' !!}
-                                                    {!! $customer->country ? optional($customer->systemCountry)->name.',
+                                                    {{-- {!! $customer->country ? optional($customer->systemCountry)->name.',
+                                                    ': '' !!} --}}
+                                                    {!! $customer->country ? $customer->country.',
                                                     ': '' !!}
                                                     {!! $customer->zipcode !!},
                                                 </address>

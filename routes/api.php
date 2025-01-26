@@ -48,4 +48,5 @@ Route::prefix('v1')->group(function () {
 
     Route::post('newsletter/subscribe', [FrontendController::class, 'subscribe']);
     Route::post('newsletter/unsubscribe', [FrontendController::class, 'unsubscribe']);
+    Route::post('customer/contact', [FrontendController::class, 'customerContact']);
 });

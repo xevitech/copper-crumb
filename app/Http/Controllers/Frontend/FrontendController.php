@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
-use App\Models\{Customer,ProductCategory,CouponProduct,Coupon,Cart,InvoiceItem,NewsletterSubscriber};
+use App\Models\{Customer,ProductCategory,CouponProduct,Coupon,Cart,InvoiceItem,NewsletterSubscriber,IcContact};
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -309,33 +309,29 @@ class FrontendController extends Controller
     public function subscribe(Request $request)
     {
         try {
-            // Custom validation
             $validator = Validator::make($request->all(), [
                 'email' => 'required|email|unique:newsletter_subscribers,email',
             ]);
 
-            // If validation fails, throw an exception
             if ($validator->fails()) {
                 return response()->json([
-                    'success' => false,
+                    'status' => false,
                     'errors' => $validator->errors(),
                 ], 422);
             }
 
-            // Store the subscriber
             $subscriber = NewsletterSubscriber::create([
                 'email' => $request->input('email'),
             ]);
 
             return response()->json([
-                'success' => true,
+                'status' => true,
                 'message' => 'Subscribed successfully!',
                 'data' => $subscriber,
             ], 201);
         } catch (\Exception $e) {
-            // Catch any other unexpected errors
             return response()->json([
-                'success' => false,
+                'status' => false,
                 'message' => 'Something went wrong!',
                 'error' => $e->getMessage(), // Debugging: return exception message
             ], 500);
@@ -354,4 +350,50 @@ class FrontendController extends Controller
 
         return response()->json(['message' => 'Unsubscribed successfully!'], 200);
     }
+
+    public function customerContact(Request $request)
+    {
+        // $name = $request->input('name');
+        // $email = $request->input('email');
+        // $subject = $request->input('subject');
+        // $message = $request->input('message');
+
+        try {
+            // Validate incoming request
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|max:255',
+                'subject' => 'required|string|max:255',
+                'message' => 'required|string',
+            ]);
+
+            // Store the data in the database
+            $contact = IcContact::create([
+                'name' => $request->input('name'),
+                'email' => $request->input('email'),
+                'subject' => $request->input('subject'),
+                'message' => $request->input('message'),
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Contact saved successfully!',
+                'data' => $contact,
+            ], 201);
+        } catch (\Exception $e) {
+            // Handle unexpected errors
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong!',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    
+
+
+
+        // if($name,$email,$subject,$message);
+    }
+
+
 }

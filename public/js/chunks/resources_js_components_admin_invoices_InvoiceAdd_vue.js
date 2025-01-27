@@ -83,6 +83,7 @@ __webpack_require__.r(__webpack_exports__);
         discount_type: "",
         // percent, fixed
         total_paid: 0,
+        table_number: 1,
         coupon: {
           code: "",
           discount: 0,
@@ -932,6 +933,35 @@ var render = function render() {
   }, [_vm._v(_vm._s(_vm.formData.shipping.phone))]), _vm._v(" "), _c("p", {
     staticClass: "m-0"
   }, [_vm._v(_vm._s(_vm.shippingAddressFull()))])]) : _vm._e()]), _vm._v(" "), _c("div", {
+    staticClass: "col-sm-12 p-0 mt-3"
+  }, [_c("div", {
+    staticClass: "from-group"
+  }, [_c("label", {
+    attrs: {
+      "for": ""
+    }
+  }, [_vm._v(_vm._s(_vm.__("custom.table_number")))]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.formData.table_number,
+      expression: "formData.table_number"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "number",
+      min: "1"
+    },
+    domProps: {
+      value: _vm.formData.table_number
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.formData, "table_number", $event.target.value);
+      }
+    }
+  })])]), _vm._v(" "), _c("div", {
     staticClass: "from-group mt-3 mb-3"
   }, [_c("label", {
     attrs: {

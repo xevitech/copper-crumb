@@ -39,6 +39,7 @@ class InvoiceRequest extends FormRequest
             'discount_type' => ['nullable', 'string', Rule::in([Invoice::DISCOUNT_FIXED, Invoice::DISCOUNT_PERCENT])],
             'payment_type' => ['required'],
             'total_paid' => ['nullable', 'numeric', 'between:0,99999999.99'],
+            'table_number' => ['nullable','numeric'],
             'bank_info' => ['nullable'],
             'notes' => ['nullable', 'max:200'],
             'status' => ['nullable', Rule::in(array_keys(Invoice::INVOICE_ALL_STATUS))],

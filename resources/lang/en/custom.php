@@ -186,6 +186,7 @@ return [
     'dis_type'                           => 'Dis Type',
     'fixed'                              => 'Fixed',
     'total_paid'                         => 'Total Paid',
+    'table_number'                       => 'Table Number',
     'save_and_close'                     => 'Save & Close',
     'required'                           => 'Required',
     'due_date'                           => 'Due Date',

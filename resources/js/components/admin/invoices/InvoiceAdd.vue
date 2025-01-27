@@ -198,6 +198,20 @@
                                 </div>
                             </div>
 
+                            <div class="col-sm-12 p-0 mt-3">
+                                <div class="from-group">
+                                    <label for="">{{ __("custom.table_number") }}</label>
+                                    <input
+                                        v-model="formData.table_number"
+                                        type="number"
+                                        min="1"
+                                        class="form-control"
+                                    />
+                                </div>
+                            </div>
+
+
+
                             <div class="from-group mt-3 mb-3">
                                 <label for="">{{ __("custom.date") }}</label>
                                 <datepicker
@@ -846,6 +860,7 @@ export default {
                 discount: 0,
                 discount_type: "", // percent, fixed
                 total_paid: 0,
+                table_number:1,
                 coupon:{
                     code: "",
                     discount: 0,

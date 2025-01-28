@@ -170,6 +170,7 @@ return [
     'edit_invoice'                       => 'Edit Invoice',
     'invoice_list'                       => 'Invoice List',
     'invoice_items'                      => 'Invoice Items',
+    'cashier'                            => 'Cashier',
     'due'                                => 'Due',
     'gross_total'                        => 'Gross Total',
     'net_total'                          => 'Net Total',

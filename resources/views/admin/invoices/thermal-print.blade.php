@@ -23,39 +23,42 @@ $authUser = auth()->guard('customer')->check();
     <tbody>
     <tr>
         <td colspan="4" style="text-align: center">
-            <h1>{{ config('app.name') }}</h1>
+            <span style="font-size: 14px; font-weight: bold; text-decoration: underline;">{{ config('app.name') }}</span>
+            <p>KAABIZ BAKES PRIVATE LIMITED.<br>Sco 6, Sector 16, Panchkula, Haryana, 134109.<br>GST:
+                06AALCK3315Q1Z4 <br> +91 9915708181 <br>sales@copperandcrumb.in</p>
+            <hr style="border: 1px solid #000; width: 100%; margin: 5px auto;">
         </td>
     </tr>
     <tr>
         <td colspan="4" style="text-align: center">
-            <span style="font-size: 12px; display: flex; justify-content: space-between;">
-                    <strong>Customer#
-                        @if($invoice->billing_info['name'])
-                            {{ $invoice->billing_info['name'] ?? '' }}
-                        @else
-                            {{ __('custom.walk_in_customer') }}
-                        @endif
-                    </strong>
-                    <strong>Invoice # {{ make8digits($invoice->id) }}</strong>
-                </span>
+            <span style="font-size: 12px;">
+                <strong>Customer:
+                    @if($invoice->billing_info['name'])
+                        {{ $invoice->billing_info['name'] ?? '' }}
+                    @else
+                        {{ __('custom.walk_in_customer') }}
+                    @endif
+                    <br>Invoice Id: {{ make8digits($invoice->id) }}
+                    <br>Invoice Date: {{ date('Y-m-d H:i:s') }}
+                    <br>Table No: {{ $invoice->table_number }}
+                    <br>Cashier: {{ Auth::user()->name }}
+                </strong>
+            </span>
         </td>
     </tr>
     <tr>
         <td colspan="4">
-            <table width="100%" cellpadding="2" cellspacing="0" border="0">
-                <tbody>
-                <tr>
-                    <td colspan="4">Invoice Date: {{ custom_date($invoice->date) }}</td>
-                </tr>
-                </tbody>
-            </table>
+            <span style="font-size: 12px;">
+                <strong>
+                </strong>
+            </span>
         </td>
     </tr>
     <tr style="">
         <td width="40%" style="border: 1px solid #333; text-align: left"><strong>{{ __('custom.product') }}</strong></td>
-        <td width="20%" style="border: 1px solid #333; border-left: 0 none;text-align: center"><strong>{{ __('custom.price') }}</strong></td>
+        <td width="20%" style="border: 1px solid #333; border-left: 0 none;text-align: center"><strong>{{ __('custom.price') }} <small>({{currencySymbol()}})</small></strong></td>
         <td width="15%" style="border: 1px solid #333; border-left: 0 none;text-align: center"><strong>{{ __('custom.qty') }}</strong></td>
-        <td width="20%" style="border: 1px solid #333; border-left: 0 none;text-align: right"><strong>{{ __('custom.total') }}</strong>
+        <td width="20%" style="border: 1px solid #333; border-left: 0 none;text-align: right"><strong>{{ __('custom.total') }} <small>({{currencySymbol()}})</small></strong>
         </td>
     </tr>
 {{--    Loop area--}}
@@ -69,17 +72,16 @@ $authUser = auth()->guard('customer')->check();
                 @endif
             </td>
             <td class="" style="border-right: 1px solid #333; text-align: center">
-                {{ currencySymbol().make2decimal($item->price) ?? '' }}
+                {{ make2decimal($item->price) ?? '' }}
             </td>
             <td class="" style="border-right: 1px solid #333; text-align: center">
                 {{ $item->quantity }}
             </td>
-            <td class="  " style="border-right: 1px solid #333; text-align: right"> {{ currencySymbol().make2decimal($item->sub_total) ?? '' }}</td>
+            <td class="  " style="border-right: 1px solid #333; text-align: right"> {{ make2decimal($item->sub_total) ?? '' }}</td>
         </tr>
         @endforeach
     @endif
 {{--    Loop Area End--}}
-
     <tr>
         <td colspan="2" style="border-top: 1px solid #333;text-align: right; font-weight: bold">{{ __('custom.discount') }}</td>
         <td colspan="2" style="border-top: 1px solid #333;text-align: right; font-weight: bold">{{ currencySymbol().make2decimal($invoice->discount_amount) }}</td>

@@ -103,8 +103,8 @@
                                         </td>
                                         <td>
                                             <address class="ic-invoice-addess ic-right-content">
-                                                <strong>{{ __('custom.invoice') }}:</strong>
-                                                <p class="mb-0">{{ __('custom.invoice_id') }} # <span id="invoice_number">{{ make8digits($invoice->id) }}</span></p>
+                                                <strong>{{ __('custom.invoice') }}: <span id="invoice_number">{{ make8digits($invoice->id) }}</span></strong>
+                                                {{-- <p class="mb-0">{{ __('custom.invoice_id') }} # <span id="invoice_number">{{ make8digits($invoice->id) }}</span></p> --}}
                                                 <p class="mb-0">{{ __('custom.date') }}: {{ custom_date($invoice->date)
                                                     }}
                                                 </p>
@@ -113,6 +113,7 @@
                                                 <p class="mb-0">{{ __('custom.status') }}: {{
                                                     \App\Models\Invoice::INVOICE_ALL_STATUS[$invoice->status] }}</p>
                                                 <p class="mb-0">{{ __('custom.delivery_status') }}: {{ucfirst($invoice->delivery_status) }}</p>
+                                                <p class="mb-0">{{ __('custom.cashier') }}: {{Auth::user()->name}}</p>
                                             </address>
                                         </td>
                                     </tr>

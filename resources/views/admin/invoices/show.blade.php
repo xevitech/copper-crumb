@@ -287,6 +287,7 @@
                                 <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
                                     <a class="dropdown-item" href="#" onclick="window.print()">A4 Print</a>
                                     <a class="dropdown-item" href="{{ route('admin.invoice.print', $invoice->id) }}">POS Print</a>
+                                    <a class="dropdown-item" href="{{ route('admin.kitchen.print', $invoice->id) }}">Kitchen Print</a>
                                 </div>
                             </div>
                             <button type="button" id="generatePDF" class="btn btn-primary">

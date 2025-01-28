@@ -15,10 +15,6 @@ $authUser = auth()->guard('customer')->check();
     <link href="https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap" rel="stylesheet">
 </head>
 <body style="align-items: center">
-<div class="no_print" style="overflow: hidden;">
-    <a class="no_print btn backBtn" href="{{ $authUser ? route('customer.invoices.index') : route('admin.invoices.index') }}">Back to Invoice</a>
-    <a onclick="location.reload();" class="no_print btn reprintBtn" href="javascript:">Print Again</a>
-</div>
 <table width="" cellspacing="0" cellpadding="2" border="0">
     <tbody>
     <tr>
@@ -104,7 +100,7 @@ $authUser = auth()->guard('customer')->check();
     <span style="text-align: left; font-weight: bold">{{ __('custom.note') }} : {{ $invoice->notes }}</span>
 <div class="no_print" style="overflow: hidden;">
     <br/>
-    <a class="no_print btn backBtn" href="{{ $authUser ? route('customer.invoices.index') : route('admin.invoices.index') }}">Back to Invoice</a>
+    <button class="no_print btn backBtn" style="cursor: pointer;" onclick="history.back()">{{ __('custom.back') }}</button>
     <a onclick="location.reload();" class="no_print btn reprintBtn" href="javascript:">Print Again</a>
 </div>
 <style type="text/css">

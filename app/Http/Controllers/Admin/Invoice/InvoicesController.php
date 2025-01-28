@@ -75,7 +75,7 @@ class InvoicesController extends Controller
 
         $all_status = $this->invoiceService->getAllStatus();
         $customers = $this->customerService->getActiveData(null, ['b_country_data', 'b_state_data', 'b_city_data']);
-//        $products = $this->productService->wareHouseWiseProducts('warehouseStockQty', $warehouse);/*$this->productService->get(null, [], 20);*/
+      //$products = $this->productService->wareHouseWiseProducts('warehouseStockQty', $warehouse);/*$this->productService->get(null, [], 20);*/
         $productStocks = $this->productService->wareHouseWiseAllProductStocks(['product','attribute','attributeItem'], $warehouse);
         $categories = $this->categoryService->getParents('subCategory');
 
@@ -125,7 +125,6 @@ class InvoicesController extends Controller
     public function store(InvoiceRequest $request)
     {
         $data = $request->validated();
-
 
         // Customer
         if (!$data['customer_id']) {

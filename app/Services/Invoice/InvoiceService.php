@@ -235,6 +235,7 @@ class InvoiceService extends BaseService
             $invoice->global_discount = $data['discount'];
             $invoice->global_discount_type = $data['discount_type'];
             $invoice->notes = $data['notes'];
+            $invoice->table_number = $data['table_number'];
             $invoice->status = $this->model::STATUS_PENDING;
             $invoice->token = Str::random(64);
             $invoice->updated_by = Auth::id();

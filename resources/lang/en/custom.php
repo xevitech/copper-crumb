@@ -171,6 +171,7 @@ return [
     'invoice_list'                       => 'Invoice List',
     'invoice_items'                      => 'Invoice Items',
     'cashier'                            => 'Cashier',
+    'item'                               => 'Item',
     'due'                                => 'Due',
     'gross_total'                        => 'Gross Total',
     'net_total'                          => 'Net Total',

@@ -46,16 +46,8 @@ $authUser = auth()->guard('customer')->check();
             </span>
         </td>
     </tr>
-    <tr>
-        <td colspan="4">
-            <span style="font-size: 12px;">
-                <strong>
-                </strong>
-            </span>
-        </td>
-    </tr>
     <tr style="">
-        <td width="40%" style="border: 1px solid #333; text-align: left"><strong>{{ __('custom.product') }}</strong></td>
+        <td width="40%" style="border: 1px solid #333; text-align: left"><strong>{{ __('custom.item') }}</strong></td>
         <td width="20%" style="border: 1px solid #333; border-left: 0 none;text-align: center"><strong>{{ __('custom.price') }} <small>({{currencySymbol()}})</small></strong></td>
         <td width="15%" style="border: 1px solid #333; border-left: 0 none;text-align: center"><strong>{{ __('custom.qty') }}</strong></td>
         <td width="20%" style="border: 1px solid #333; border-left: 0 none;text-align: right"><strong>{{ __('custom.total') }} <small>({{currencySymbol()}})</small></strong>

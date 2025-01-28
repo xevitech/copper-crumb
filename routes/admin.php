@@ -69,6 +69,7 @@ Route::namespace('Admin')->prefix('admin')->as('admin.')->group(function () {
     Route::post('invoices/make-payment/{id}', 'Invoice\InvoicesController@makePaymentPost')->name('invoices.makePaymentPost');
     Route::get('invoices/customer-email/{id}', 'Invoice\InvoicesController@invoiceCustomerEmail');
     Route::get('invoices-print/{id}', 'Invoice\InvoicesController@print')->name('invoice.print');
+    Route::get('kitchen-print/{id}', 'Invoice\InvoicesController@kitchenPrint')->name('kitchen.print');
 
     // SALE
     Route::resource('sales', 'Sale\SalesController');

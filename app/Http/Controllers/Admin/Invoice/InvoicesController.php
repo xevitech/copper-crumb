@@ -282,6 +282,13 @@ class InvoicesController extends Controller
         ]);
     }
 
+    public function kitchenPrint($id)
+    {
+        return view('admin.invoices.kitchen-print', [
+            'invoice' => $this->invoiceService->get($id)
+        ]);
+    }
+
     /**
      * addPayment
      *

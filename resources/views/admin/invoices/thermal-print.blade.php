@@ -15,11 +15,17 @@ $authUser = auth()->guard('customer')->check();
     <link href="https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap" rel="stylesheet">
 </head>
 <body style="align-items: center">
-<table width="" cellspacing="0" cellpadding="2" border="0">
+<table width="" cellspacing="0" cellpadding="2" border="1">
     <tbody>
     <tr>
         <td colspan="4" style="text-align: center">
-            <span style="font-size: 14px; font-weight: bold; text-decoration: underline;">{{ config('app.name') }}</span>
+            <h3 class="mt-0">
+                @if(config('is_logo_show_in_invoice') == 'yes')
+                <img src="{{ site_logo() }}" alt="logo" style="max-width: 60px; height: auto; display: block; margin: 0 auto;"> 
+                @else
+                <span style="font-size: 14px; font-weight: bold; text-decoration: underline;">{{ config('app.name') }}</span>
+                @endif
+            </h3>
             <p>KAABIZ BAKES PRIVATE LIMITED.<br>Sco 6, Sector 16, Panchkula, Haryana, 134109.<br>GST:
                 06AALCK3315Q1Z4 <br> +91 9915708181 <br>sales@copperandcrumb.in</p>
             <hr style="border: 1px solid #000; width: 100%; margin: 5px auto;">
@@ -97,7 +103,7 @@ $authUser = auth()->guard('customer')->check();
     </tbody>
 </table>
 
-    <span style="text-align: left; font-weight: bold">{{ __('custom.note') }} : {{ $invoice->notes }}</span>
+    <span style="text-align: left; font-weight: bold; margin-left:5px; margin-bottom:10px;">{{ __('custom.note') }} : {{ $invoice->notes }}</span>
 <div class="no_print" style="overflow: hidden;">
     <br/>
     <button class="no_print btn backBtn" style="cursor: pointer;" onclick="history.back()">{{ __('custom.back') }}</button>
@@ -129,8 +135,9 @@ $authUser = auth()->guard('customer')->check();
         }
 
         table {
-            width: 2.3in;
+            width: 2.5in;
             margin-bottom: 20px;
+            margin-left:8%;
         }
 
         table td {

@@ -41,7 +41,7 @@ $authUser = auth()->guard('customer')->check();
                         {{ __('custom.walk_in_customer') }}
                     @endif
                     <br>Invoice Id: {{ make8digits($invoice->id) }}
-                    <br>Invoice Date: {{ date('Y-m-d H:i:s') }}
+                    <br>Date: {{ date('Y-m-d H:i:s') }}
                     <br>Table No: {{ $invoice->table_number }}
                     <br>Cashier: {{ Auth::user()->name }}
                 </strong>
@@ -103,6 +103,33 @@ $authUser = auth()->guard('customer')->check();
     </tbody>
 </table>
 
+<span  style="text-align: center">
+    {{-- <hr style="border: 1px solid #000; width: 100%; margin: 5px auto;"> --}}
+    <h3>
+        <span style="font-size: 14px; font-weight: bold;">{{ __('custom.payments') }}</span>
+    </h3>
+    <hr style="border: 1px solid #000; width: 100%; margin: 2px auto;">
+
+    <table class="table table-bordered table-sm">
+        <thead>
+            <th>Invoice {{ __('custom.date') }}</th>
+            <th>{{ __('custom.payment_type') }}</th>
+            <th>{{ __('custom.amount') }}</th>
+        </thead>
+        <tbody>
+            @if ($invoice->payments)
+            @foreach ($invoice->payments as $item)
+            <tr>
+                <td>{{ $item->date }}</td>
+                <td>{{ $item->payment_type }}</td>
+                <td>{{ currencySymbol().make2decimal($item->amount) }}</td>
+            </tr>
+            @endforeach
+            @endif
+        </tbody>
+    </table>
+    <hr style="border: 1px solid #000; width: 100%; margin: 2px auto;">
+</span>
     <span style="text-align: left; font-weight: bold; margin-left:5px; margin-bottom:10px;">{{ __('custom.note') }} : {{ $invoice->notes }}</span>
 <div class="no_print" style="overflow: hidden;">
     <br/>
@@ -118,7 +145,7 @@ $authUser = auth()->guard('customer')->check();
     }
 
     .backBtn {
-        background-color: #1221ff;
+        background-color: #000000;
     }
 
     .ic-border-bottom {
@@ -126,7 +153,7 @@ $authUser = auth()->guard('customer')->check();
     }
 
     .reprintBtn {
-        background-color: #09ff88;
+        background-color: #573505;
     }
 
     @media print {

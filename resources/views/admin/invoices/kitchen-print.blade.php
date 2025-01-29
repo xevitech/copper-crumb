@@ -14,7 +14,7 @@ $authUser = auth()->guard('customer')->check();
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap" rel="stylesheet">
 </head>
-<body style="align-items: center">
+<body style="align-items: center; justify-content: center">
 <table width="" cellspacing="0" cellpadding="2" border="1">
     <tbody>
     <tr>
@@ -57,11 +57,11 @@ $authUser = auth()->guard('customer')->check();
 </table>
 
     <span style="text-align: left; font-weight: bold">{{ __('custom.note') }} : {{ $invoice->notes }}</span>
-<div class="no_print" style="overflow: hidden;">
-    <br/>
-    <button class="no_print btn backBtn" style="cursor: pointer;" onclick="history.back()">{{ __('custom.back') }}</button>
-    <a onclick="location.reload();" class="no_print btn reprintBtn" href="javascript:">Print Again</a>
-</div>
+    <div class="no_print" style="overflow: hidden;">
+        <br/>
+        <button class="no_print btn backBtn" style="cursor: pointer;" onclick="history.back()">{{ __('custom.back') }}</button>
+        <a onclick="location.reload();" class="no_print btn reprintBtn" href="javascript:">Print Again</a>
+    </div>
 <style type="text/css">
     .btn {
         padding: 10px;
@@ -71,7 +71,7 @@ $authUser = auth()->guard('customer')->check();
     }
 
     .backBtn {
-        background-color: #1221ff;
+        background-color: #000000;
     }
 
     .ic-border-bottom {
@@ -79,7 +79,7 @@ $authUser = auth()->guard('customer')->check();
     }
 
     .reprintBtn {
-        background-color: #09ff88;
+        background-color: #c07802;
     }
 
     @media print {
@@ -90,6 +90,7 @@ $authUser = auth()->guard('customer')->check();
         table {
             width: 2.3in;
             margin-bottom: 20px;
+            margin-left:10%;
         }
 
         table td {

@@ -79,7 +79,7 @@ $authUser = auth()->guard('customer')->check();
     }
 
     .reprintBtn {
-        background-color: #c07802;
+        background-color: #573505;
     }
 
     @media print {

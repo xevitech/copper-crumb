@@ -67,6 +67,9 @@ use Illuminate\Support\Facades\Schema;
     Route::get('payment/stripe/cancel', 'Admin\Invoice\InvoicesController@stripeCancel')->name('stripe.cancel');
     Route::get('payment/paypal/success', 'Admin\Invoice\InvoicesController@paypalSuccess')->name('paypal.success');
     Route::get('payment/success', 'Admin\Invoice\InvoicesController@paymentSuccess')->name('payment.success');
+//HDFC
+    Route::post('/initiate-payment', [HdfcPaymentController::class, 'initiatePayment'])->name('initiate.payment');
+    Route::get('/hdfc-response', [HdfcPaymentController::class, 'handleHdfcResponse'])->name('hdfc.response');
 
 // LOCATION
     Route::prefix('locations')->as('locations.')->middleware(['auth'])->group(function () {

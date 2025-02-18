@@ -35,7 +35,7 @@ class ProductService extends BaseService
         $this->fileUploadService = app(FileUploadService::class);
     }
 
-    public function wareHouseWiseProducts($with = null, $warehouse)
+    public function wareHouseWiseProducts($with = null,$warehouse)
     {
         return $this->model
             ->newQuery()
@@ -50,7 +50,7 @@ class ProductService extends BaseService
             })->get();
     }
 
-    public function wareHouseWiseAllProductStocks($with = null, $warehouse)
+    public function wareHouseWiseAllProductStocks($with = null,$warehouse)
     {
         return ProductStock::
             when(Auth::guard('customer')->check(), function($q){

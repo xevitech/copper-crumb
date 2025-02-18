@@ -75,7 +75,7 @@ Vue.component('purchase-edit', () =>
 Vue.component('customer-invoice', () =>
     import('./components/customer/invoice/invoiceAdd.vue'))
 Vue.component('customer-invoice-edit', () =>
-    import('./components/customer/invoice/invoiceEdit.vue'))
+    import('./components/customer/invoice/InvoiceEdit.vue'))
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

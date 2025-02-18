@@ -15,7 +15,7 @@
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^3.0",
         "geo-sot/laravel-env-editor": "^1.1",
-        "guzzlehttp/guzzle": "^7.0.1",
+        "guzzlehttp/guzzle": "^7.9",
         "laracasts/flash": "^3.2",
         "laravel/framework": "^8.12",
         "laravel/sanctum": "2.11",

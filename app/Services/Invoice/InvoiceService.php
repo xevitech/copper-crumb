@@ -9,6 +9,7 @@ use App\Models\Invoice;
 use App\Models\Product;
 use App\Mail\InvoiceSend;
 use App\Models\Warehouse;
+use App\Models\Customer;
 use App\Models\InvoiceItem;
 use Illuminate\Support\Str;
 use App\Models\ProductStock;
@@ -367,6 +368,10 @@ class InvoiceService extends BaseService
             }
 
             $invoice->save();
+
+            //Update Loyalty Points
+            $loyaltyPoints = round($invoice->last_paid * 0.05);
+            Customer::where('id', $data['customer_id'])->increment('loyalty', $loyaltyPoints);
 
 
 

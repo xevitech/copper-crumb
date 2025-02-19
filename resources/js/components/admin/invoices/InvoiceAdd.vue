@@ -326,6 +326,18 @@
                                     </tr>
                                     </tbody>
                                     <tfoot>
+                                    <tr v-if="isCustomerSelected">
+                                        <td colspan="4">
+                                            <b>{{ __("custom.loyalty") }}</b>
+                                        </td>
+                                        <td>
+                                            <input type="checkbox" v-model="loyaltyChecked" @change="calculateTotalWithOutTax" class="form-control border">
+                                        </td>
+                                        <td>
+                                            <b>{{ currency_symbol }} {{ formData.billing.loyalty }}</b>
+                                        </td>
+                                        <td></td>
+                                    </tr>
                                     <tr>
                                         <td colspan="5">
                                             <b>{{ __("custom.sub_total") }}</b>
@@ -335,6 +347,7 @@
                                         </td>
                                         <td></td>
                                     </tr>
+                                    
                                     <tr v-if="cartNotEmpty">
                                         <td colspan="2">
                                             <b>{{ __("custom.discount") }}</b>
@@ -814,6 +827,7 @@ export default {
             search: "",
             char_limit: 200,
             is_shipping_same_billing: false,
+            loyaltyChecked: false,
             formData: {
                 warehouse_id: this.warehouse_id,
                 payment_type: "cash",
@@ -1059,6 +1073,7 @@ export default {
             this.formData.billing = {
                 name: customer.full_name,
                 email: customer.email,
+                loyalty: customer.loyalty,
                 phone: customer.b_phone,
                 address_line_1: customer.b_address_line_1,
                 address_line_2: customer.b_address_line_2,
@@ -1169,10 +1184,14 @@ export default {
         },
         calculateTotalWithOutTax() {
             const total = this.itemsTotal() - this.totalTax();
-            // console.log(this.itemsTotal());
-            // console.log(this.totalTax());
+            // if (this.loyaltyChecked) {
+            //     console.log('checked');
+            //     let discount = this.formData.billing.loyalty || 0;
+            //     total = total - discount;
+            // }
             return Number(total).toFixed(2);
         },
+        
         calculateTotalWithTax() {
             const total = this.itemsTotal() - this.calculateGlobalDiscount();
             return Number(total).toFixed(2);

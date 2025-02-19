@@ -352,6 +352,7 @@ return [
     'view'                               => 'View',
     'quantity'                           => 'Quantity',
     'sub_total'                          => 'Sub Total',
+    'loyalty'                            => 'Loyalty Points',
     'add_more'                           => 'Add More',
     'search_product'                     => 'Search Product',
     'search_product_by'                  => 'Search Product By Name and SKU',

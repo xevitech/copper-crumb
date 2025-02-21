@@ -875,6 +875,7 @@ export default {
                 discount_type: "", // percent, fixed
                 total_paid: 0,
                 table_number:1,
+                // loyalty_applied:0,
                 coupon:{
                     code: "",
                     discount: 0,
@@ -1184,11 +1185,6 @@ export default {
         },
         calculateTotalWithOutTax() {
             const total = this.itemsTotal() - this.totalTax();
-            // if (this.loyaltyChecked) {
-            //     console.log('checked');
-            //     let discount = this.formData.billing.loyalty || 0;
-            //     total = total - discount;
-            // }
             return Number(total).toFixed(2);
         },
         
@@ -1196,23 +1192,74 @@ export default {
             const total = this.itemsTotal() - this.calculateGlobalDiscount();
             return Number(total).toFixed(2);
         },
+        /*
+            itemsTotal() {
+                /* //Raw Code
+                if (this.formData.items.length > 0) {
+                    let total = 0;
+                    this.formData.items.map((item) => {
+                        // console.log(this.calculateTax(item));
+                        total =
+                            (Number(item.price - this.calculateDiscount(item)) +
+                                Number(this.calculateTax(item))) *
+                            item.quantity +
+                            Number(total);
+                    });
+
+                    return total.toFixed(2);
+                }
+                return 0;
+                / //Raw code
+
+                if (this.formData.items.length > 0) {
+                    let total = 0;
+                    if(this.loyaltyChecked){
+                        (this.formData.items.map((item) => {
+                            // console.log(this.calculateTax(item));
+                            let loyalty_discount = this.formData.billing.loyalty || 0;
+                            total =
+                                (Number(item.price - this.calculateDiscount(item)) +
+                                    Number(this.calculateTax(item))) *
+                                item.quantity +
+                                Number(total);
+                        }) - loyalty_discount);
+
+                    }else{
+                        this.formData.items.map((item) => {
+                            // console.log(this.calculateTax(item));
+                            total =
+                                (Number(item.price - this.calculateDiscount(item)) +
+                                    Number(this.calculateTax(item))) *
+                                item.quantity +
+                                Number(total);
+                        });
+                    }
+                    
+
+                    return total.toFixed(2);
+                }
+                return 0;
+            },
+        */
+
         itemsTotal() {
             if (this.formData.items.length > 0) {
-                let total = 0;
-                this.formData.items.map((item) => {
-                    // console.log(this.calculateTax(item));
-                    total =
-                        (Number(item.price - this.calculateDiscount(item)) +
-                            Number(this.calculateTax(item))) *
-                        item.quantity +
-                        Number(total);
-                });
+                let total = this.formData.items.reduce((sum, item) => {
+                    return sum + ((Number(item.price) - this.calculateDiscount(item) + this.calculateTax(item)) * item.quantity);
+                }, 0);
+
+                if (this.loyaltyChecked) {
+                    let loyalty_discount = this.formData.billing.loyalty || 0;
+                    this.formData.loyalty_applied = loyalty_discount;
+                    total -= Number(loyalty_discount);
+                }
+
+                this.formData.loyalty_applied = 0;
 
                 return total.toFixed(2);
             }
             return 0;
         },
-
         totalTax() {
             let total = 0;
             this.formData.items.map((item) => {

@@ -234,6 +234,7 @@ class InvoiceService extends BaseService
                 $invoice->bank_info = $data['bank_info'] ?? null;
             }
             $invoice->global_discount = $data['discount'];
+            $invoice->loyalty_discount = $data['loyalty_discount'];
             $invoice->global_discount_type = $data['discount_type'];
             $invoice->notes = $data['notes'];
             $invoice->table_number = $data['table_number'];
@@ -335,7 +336,16 @@ class InvoiceService extends BaseService
                 $payment->save();
             }
 
-            $total = $gross_total + $total_tax;
+            $xtotal = $gross_total + $total_tax;
+
+            //totla with loyalty_points
+            if($data['loyalty_discount']){
+                $total = $xtotal - $data['loyalty_discount'];
+            }else{
+                $total = $xtotal;
+            }
+
+                       
 
             // Calculate global discount
             $global_discount_amount = 0;

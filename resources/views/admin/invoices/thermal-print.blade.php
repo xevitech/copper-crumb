@@ -75,11 +75,17 @@ $authUser = auth()->guard('customer')->check();
         </tr>
         @endforeach
     @endif
-{{--    Loop Area End--}}
+    {{-- Loop Area End--}}
     <tr>
         <td colspan="2" style="border-top: 1px solid #333;text-align: right; font-weight: bold">{{ __('custom.discount') }}</td>
         <td colspan="2" style="border-top: 1px solid #333;text-align: right; font-weight: bold">{{ currencySymbol().make2decimal($invoice->discount_amount) }}</td>
     </tr>
+    @if($invoice->loyalty_discount)
+    <tr>
+        <td colspan="2" style="border-top: 1px solid #333;text-align: right; font-weight: bold">{{ __('custom.loyalty_discount') }}</td>
+        <td colspan="2" style="border-top: 1px solid #333;text-align: right; font-weight: bold">{{ currencySymbol().make2decimal($invoice->loyalty_discount) }}</td>
+    </tr>
+    @endif
     <tr>
         <td colspan="2" style="text-align: right; font-weight: bold">{{ __('custom.tax') }}</td>
         <td colspan="2" style="text-align: right; font-weight: bold">{{ currencySymbol().make2decimal($invoice->tax_amount) }}</td>
@@ -101,6 +107,7 @@ $authUser = auth()->guard('customer')->check();
         <td colspan="2" style="text-align: right; font-weight: bold">{{ currencySymbol().make2decimal(calculateDue($invoice->total, $invoice->total_paid)) }}</td>
     </tr>
     </tbody>
+
 </table>
 
 <span  style="text-align: center">

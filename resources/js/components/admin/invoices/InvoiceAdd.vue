@@ -331,7 +331,7 @@
                                             <b>{{ __("custom.loyalty") }}</b>
                                         </td>
                                         <td>
-                                            <input type="checkbox" v-model="loyaltyChecked" @change="calculateTotalWithOutTax" class="form-control border">
+                                            <input type="checkbox" v-model="loyaltyChecked"  class="form-control border">
                                         </td>
                                         <td>
                                             <b>{{ currency_symbol }} {{ formData.billing.loyalty }}</b>
@@ -875,7 +875,7 @@ export default {
                 discount_type: "", // percent, fixed
                 total_paid: 0,
                 table_number:1,
-                // loyalty_applied:0,
+                loyalty_discount:0,
                 coupon:{
                     code: "",
                     discount: 0,
@@ -1249,12 +1249,13 @@ export default {
                 }, 0);
 
                 if (this.loyaltyChecked) {
-                    let loyalty_discount = this.formData.billing.loyalty || 0;
-                    this.formData.loyalty_applied = loyalty_discount;
-                    total -= Number(loyalty_discount);
+                    let loyalty_discount = Number(this.formData.billing.loyalty) || 0;
+                    this.formData.loyalty_discount = loyalty_discount; 
+                    total -= loyalty_discount;
+                } else {
+                    this.formData.loyalty_discount = 0; 
                 }
 
-                this.formData.loyalty_applied = 0;
 
                 return total.toFixed(2);
             }

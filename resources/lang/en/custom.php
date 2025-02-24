@@ -353,6 +353,7 @@ return [
     'quantity'                           => 'Quantity',
     'sub_total'                          => 'Sub Total',
     'loyalty'                            => 'Loyalty Points',
+    'loyalty_discount'                   => 'Loyalty Discount',
     'add_more'                           => 'Add More',
     'search_product'                     => 'Search Product',
     'search_product_by'                  => 'Search Product By Name and SKU',

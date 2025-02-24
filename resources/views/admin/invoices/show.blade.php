@@ -175,6 +175,12 @@
                                                 <td class="thick-line">{{ currencySymbol().make2decimal($invoice->discount_amount) }}</td>
                                             </tr>
                                             <tr>
+                                                <td class="thick-line text-right" colspan="6">
+                                                    <strong>{{ __('custom.loyalty_discount') }}</strong>
+                                                </td>
+                                                <td class="thick-line">{{ currencySymbol().make2decimal($invoice->loyalty_discount) }}</td>
+                                            </tr>
+                                            <tr>
                                                 <td class="no-line text-right" colspan="6">
                                                     <strong>{{ __('custom.tax') }}</strong>
                                                 </td>

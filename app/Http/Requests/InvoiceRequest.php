@@ -36,6 +36,7 @@ class InvoiceRequest extends FormRequest
             'shipping' => ['nullable', 'array'],
             'tax' => ['numeric'],
             'discount' => ['numeric'],
+            'loyalty_discount' => ['numeric'],
             'discount_type' => ['nullable', 'string', Rule::in([Invoice::DISCOUNT_FIXED, Invoice::DISCOUNT_PERCENT])],
             'payment_type' => ['required'],
             'total_paid' => ['nullable', 'numeric', 'between:0,99999999.99'],

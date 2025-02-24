@@ -366,6 +366,7 @@ return [
     'tag_3'                              => 'Title',
     'sgst_tax_amount'                    => 'Sgst Tax Amount',
     'igst_tax_amount'                    => 'Igst Tax Amount',
+    'website'                            => 'Website',
     'website_images'                     => 'Website Images',
     'feature_image'                      => 'Feature Image',
     'image_1'                            => 'Image',

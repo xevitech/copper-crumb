@@ -109,14 +109,14 @@
 
                         {{-- Quantity --}}
                         <input type="hidden" name="quantity" value="">
-                        <!--<div class="form-group col-sm-6">-->
-                        <!--    {{-- <label for="">{{__('custom.model')}}</label> --}}-->
-                        <!--    <label for="">{{__('custom.quantity')}} <span class="error">*</span></label>-->
-                        <!--    <input type="number" name="quantity" class="form-control" value="{{ old('quantity') }}" required>-->
-                        <!--    @error('quantity')-->
-                        <!--    <p class="error">{{ $message }}</p>-->
-                        <!--    @enderror-->
-                        <!--</div>-->
+                        {{-- <div class="form-group col-sm-6">
+                            // <label for="">{{__('custom.model')}}</label> 
+                            <label for="">{{__('custom.quantity')}} <span class="error">*</span></label>
+                            <input type="number" name="quantity" class="form-control" value="{{ old('quantity') }}" required>
+                            @error('quantity')
+                            <p class="error">{{ $message }}</p>
+                            @enderror
+                        </div> --}}
                         {{-- Price  --}}
 
                         <div class="form-group col-sm-6">
@@ -139,10 +139,6 @@
                         </div>
 
                         {{-- weight/weight unit  --}}
-                        <input type="hidden" name="weight" value="">
-                        <input type="hidden" name="weight_unit_id" value="">
-
-                        {{--
 
                         <div class="form-group col-sm-6">
                             <label for="">{{__('custom.weight')}}</label>
@@ -165,20 +161,13 @@
                             @enderror
                         </div>
 
-                        --}}
 
                         {{-- dimension  --}}
-                        <input type="hidden" name="dimension_l" value="">
-                        <input type="hidden" name="dimension_w" value="">
-                        <input type="hidden" name="dimension_d" value="">
-
-
-                        {{--
 
                         <div class="col-sm-12">
                             <label for="">{{ __('custom.dimension') }}</label>
                             <div class="row">
-                                <div class="form-group col-sm-3">
+                                <div class="form-group col-sm-2">
                                     <label for="" class="text-muted">{{__('custom.length')}}</label>
                                     <input type="number" name="dimension_l" class="form-control" min="0" step="any"
                                         value="{{ old('dimension_l') }}">
@@ -187,7 +176,7 @@
                                     @enderror
                                 </div>
 
-                                <div class="form-group col-sm-3">
+                                <div class="form-group col-sm-2">
                                     <label for="" class="text-muted">{{__('custom.width')}}</label>
                                     <input type="number" name="dimension_w" class="form-control" min="0"
                                         value="{{ old('dimension_w') }}" step="any">
@@ -196,7 +185,7 @@
                                     @enderror
                                 </div>
 
-                                <div class="form-group col-sm-3">
+                                <div class="form-group col-sm-2">
                                     <label for="" class="text-muted">{{__('custom.depth')}}</label>
                                     <input type="number" name="dimension_d" class="form-control" min="0"
                                         value="{{ old('dimension_d') }}" step="any">
@@ -218,22 +207,7 @@
                                 </div>
                             </div>
                         </div>
-                        --}}
                         {{-- measurement unit  --}}
-
-                        <div class="form-group col-sm-6">
-                            <label for="" class="">{{__('custom.measurement_unit')}}</label>
-                            <select name="measurement_unit_id" class="form-control select2">
-                                <option value="">{{ __('custom.select_measurement_unit') }}</option>
-                                @foreach ($measurement_units as $item)
-                                <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                @endforeach
-                            </select>
-                            @error('measurement_unit_id')
-                            <p class="error">{{ $message }}</p>
-                            @enderror
-                        </div>
-
                         
                         {{-- tax --}}
                         <div class="col-sm-12">
@@ -390,8 +364,6 @@
                             </div>
                         </div>
 
-
-
                         {{-- attributes --}}
 
                          <div class="col-sm-12">
@@ -418,18 +390,18 @@
                             <p class="error">{{ $message }}</p>
                             @enderror
 
-                            {{--
+                            
                             <label class="d-block mb-3 mt-3">{{ __('custom.available_for') }} <span class="error">*</span></label>
 
                             <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="available_for_customer" value="{{ \App\Models\Product::SALE_AVAILABLE_FOR['customer'] }}"
+                                <input type="radio" id="available_for_customer" value="{{ \App\Models\Product::SALE_AVAILABLE_FOR['store'] }}"
                                        name="available_for" class="custom-control-input">
-                                <label class="custom-control-label" for="available_for_customer">{{__('custom.customer')}}</label>
+                                <label class="custom-control-label" for="available_for_customer">{{__('custom.store')}}</label>
                             </div>
                             <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="available_for_warehouse" value="{{ \App\Models\Product::SALE_AVAILABLE_FOR['warehouse'] }}"
+                                <input type="radio" id="available_for_warehouse" value="{{ \App\Models\Product::SALE_AVAILABLE_FOR['website'] }}"
                                        name="available_for" class="custom-control-input">
-                                <label class="custom-control-label" for="available_for_warehouse">{{__('custom.warehouse')}}</label>
+                                <label class="custom-control-label" for="available_for_warehouse">{{__('custom.website')}}</label>
                             </div>
                             <div class="custom-control custom-radio custom-control-inline">
                                 <input type="radio" id="available_for_all" value="{{ \App\Models\Product::SALE_AVAILABLE_FOR['all'] }}"
@@ -442,7 +414,7 @@
                             @enderror
 
 
-                            <div class="custom-control custom-checkbox">
+                           {{-- <div class="custom-control custom-checkbox">
                                 <label for="" class=" "></label><br>
                                 <input class="form-check-input custom-control-input" type="checkbox" value="1"
                                     id="isVariant" name="is_variant">
@@ -455,16 +427,15 @@
                             <p class="error">{{ $message }}</p>
                             @enderror
 
-                            <div class="custom-control custom-checkbox">
+                             <div class="custom-control custom-checkbox">
                                 <label for="" class=" "></label><br>
                                 <input class="form-check-input custom-control-input" type="checkbox" value="1"
                                        id="split_sale" name="split_sale">
                                 <label class="form-check-label custom-control-label checkbox-label" for="split_sale">
                                     {{ __('custom.is_split_sale')}}
                                 </label>
-                            </div>
-
-                            --}}
+                            </div> --}}
+                            
                         </div>
                     </div>
                     <div class="form-group">

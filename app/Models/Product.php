@@ -76,8 +76,8 @@ class Product extends Model
 
     public const SALE_AVAILABLE_FOR = [
         'all'       => 'all',
-        'customer'  => 'customer',
-        'warehouse' => 'warehouse',
+        'store'     => 'store',
+        'website'   => 'website',
     ];
 
 

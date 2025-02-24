@@ -92,11 +92,11 @@
                         
                         <input type="hidden" name="manufacturer_id" id="">
                         <input type="hidden" name="quantity" value="">
-                        <input type="hidden" name="weight" value="">
+                        {{-- <input type="hidden" name="weight" value="">
                         <input type="hidden" name="weight_unit_id" value="">
                         <input type="hidden" name="dimension_l" value="">
                         <input type="hidden" name="dimension_w" value="">
-                        <input type="hidden" name="dimension_d" value="">
+                        <input type="hidden" name="dimension_d" value=""> --}}
                         {{--
                         <div class="form-group col-sm-6">
                             <label for="">{{__('custom.manufacturer')}}</label>
@@ -140,7 +140,7 @@
                             @enderror
                         </div>
                         
-                        {{--
+                        
 
                         <div class="form-group col-sm-6">
                             <label for="">{{__('custom.weight')}}</label>
@@ -212,7 +212,7 @@
                             </div>
                         </div>
                         
-                        --}}
+                        
                         <div class="form-group col-sm-6">
                             <label for="" class="text-muted">{{__('custom.measurement_unit')}}</label>
                             <select name="measurement_unit_id" class="form-control select2">
@@ -420,18 +420,18 @@
                                 <label class="custom-control-label" for="status_no">{{__('custom.inactive')}}</label>
                             </div>
                             
-                            {{--
+                            
                             <label class="d-block mb-3 mt-3">{{ __('custom.available_for') }} <span class="error">*</span></label>
 
                             <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="available_for_customer" value="{{ \App\Models\Product::SALE_AVAILABLE_FOR['customer'] }}"
-                                       name="available_for" class="custom-control-input" @if($product->available_for == \App\Models\Product::SALE_AVAILABLE_FOR['customer'] ) checked="" @endif>
-                                <label class="custom-control-label" for="available_for_customer">{{__('custom.customer')}}</label>
+                                <input type="radio" id="available_for_customer" value="{{ \App\Models\Product::SALE_AVAILABLE_FOR['store'] }}"
+                                       name="available_for" class="custom-control-input" @if($product->available_for == \App\Models\Product::SALE_AVAILABLE_FOR['store'] ) checked="" @endif>
+                                <label class="custom-control-label" for="available_for_customer">{{__('custom.store')}}</label>
                             </div>
                             <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="available_for_warehouse" value="{{ \App\Models\Product::SALE_AVAILABLE_FOR['warehouse'] }}"
-                                       name="available_for" class="custom-control-input" @if($product->available_for == \App\Models\Product::SALE_AVAILABLE_FOR['warehouse'] ) checked="" @endif>
-                                <label class="custom-control-label" for="available_for_warehouse">{{__('custom.warehouse')}}</label>
+                                <input type="radio" id="available_for_warehouse" value="{{ \App\Models\Product::SALE_AVAILABLE_FOR['website'] }}"
+                                       name="available_for" class="custom-control-input" @if($product->available_for == \App\Models\Product::SALE_AVAILABLE_FOR['website'] ) checked="" @endif>
+                                <label class="custom-control-label" for="available_for_warehouse">{{__('custom.website')}}</label>
                             </div>
                             <div class="custom-control custom-radio custom-control-inline">
                                 <input type="radio" id="available_for_all" value="{{ \App\Models\Product::SALE_AVAILABLE_FOR['all'] }}"
@@ -444,7 +444,7 @@
                             @enderror
 
 
-
+                            {{--
                             <div class="custom-control custom-checkbox">
                                 <label for="" class=" "></label><br>
                                 <input class="form-check-input custom-control-input" {{ $product->is_variant ? 'checked' : '' }} type="checkbox" value="1"
@@ -466,8 +466,9 @@
                                     {{ __('custom.is_split_sale')}}
                                 </label>
                             </div>
-                            
                             --}}
+                            
+                            
 
                             <div class="form-group mt-2">
                                 <div>

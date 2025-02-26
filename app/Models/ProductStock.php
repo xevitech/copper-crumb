@@ -47,7 +47,8 @@ class ProductStock extends Model
             return ($this->customer_buying_price > 0 || $this->customer_buying_price != null) ?
                 $this->customer_buying_price : (($this->price > 0 || $this->price != null) ? $this->price : (($this->product->customer_buying_price > 0 || $this->product->customer_buying_price != null) ? $this->product->customer_buying_price : $this->product->price));
         }else{
-            return ($this->price > 0 || $this->price != null) ? $this->price : (($this->product->price > 0 || $this->product->price != null) ? $this->product->price : 0);
+            // return ($this->price > 0 || $this->price != null) ? $this->price : (($this->product->price > 0 || $this->product->price != null) ? $this->product->price : 0);
+            return ($this->customer_buying_price > 0 || $this->customer_buying_price != null) ? $this->customer_buying_price : (($this->product->customer_buying_price > 0 || $this->product->customer_buying_price != null) ? $this->product->customer_buying_price : 0);
         }
     }
 

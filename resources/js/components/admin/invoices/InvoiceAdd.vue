@@ -46,6 +46,7 @@
                                     ></Select2>
                                 </div>
                             </div>
+                            
                             <div class="ic-product-head" v-if="showProduct">
                                 <div
                                     v-for="(product_stock, index) in product_list"
@@ -979,8 +980,8 @@ export default {
                                     stock: product_stock.quantity,
                                     quantity: 1,
                                     tax_status: product_stock.product.tax_status,
-                                    // custom_tax: product_stock.product.custom_tax,
-                                    custom_tax: product_stock.product.sgst_tax + product_stock.product.igst_tax,
+                                    custom_tax: product_stock.product.custom_tax,
+                                    // custom_tax: product_stock.product.sgst_tax + product_stock.product.igst_tax,
                                     discount: 0,
                                     discount_type: "percent",
                                 });

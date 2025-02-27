@@ -348,6 +348,17 @@
                                         </td>
                                         <td></td>
                                     </tr>
+
+                                    <!-- //total loyalty discount -->
+                                    <tr v-if="isCustomerSelected">
+                                        <td colspan="5">
+                                            <b>Total Loyalty discount</b>
+                                        </td>
+                                        <td>
+                                            <b>{{ currency_symbol }} {{ totalLoyaltyDiscount }}</b>
+                                        </td>
+                                        <td></td>
+                                    </tr>
                                     
                                     <tr v-if="cartNotEmpty">
                                         <td colspan="2">
@@ -829,6 +840,7 @@ export default {
             char_limit: 200,
             is_shipping_same_billing: false,
             loyaltyChecked: false,
+            totalLoyaltyDiscount:0,
             formData: {
                 warehouse_id: this.warehouse_id,
                 payment_type: "cash",
@@ -1250,13 +1262,22 @@ export default {
                 }, 0);
 
                 if (this.loyaltyChecked) {
-                    let loyalty_discount = Number(this.formData.billing.loyalty) || 0;
-                    this.formData.loyalty_discount = loyalty_discount; 
-                    total -= loyalty_discount;
+                    let loyalty_points = Number(this.formData.billing.loyalty) || 0;
+                    if(loyalty_points > total){
+                        let loyalty_discount = total;
+                        this.formData.loyalty_discount = loyalty_discount;
+                        this.totalLoyaltyDiscount = loyalty_discount;
+                        total = 0;
+                    }else{
+                        this.formData.loyalty_discount = loyalty_points;
+                        this.totalLoyaltyDiscount = loyalty_points;
+                        total -= loyalty_points;
+                    }
+                   
                 } else {
                     this.formData.loyalty_discount = 0; 
+                    this.totalLoyaltyDiscount = 0;
                 }
-
 
                 return total.toFixed(2);
             }

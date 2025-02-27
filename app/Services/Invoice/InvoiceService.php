@@ -206,7 +206,6 @@ class InvoiceService extends BaseService
     public function storeOrUpdate(array $data, $id = null)
     {
         try {
-
             DB::beginTransaction();
             if ($id) {
                 $invoice = $this->model::findOrFail($id);
@@ -345,14 +344,12 @@ class InvoiceService extends BaseService
                 $total = $xtotal;
             }
 
-                       
-
             // Calculate global discount
             $global_discount_amount = 0;
             if ($data['discount_type'] == $this->model::DISCOUNT_PERCENT) {
                 $global_discount_amount = $total * ($data['discount'] / 100);
             } else {
-                $global_discount_amount = $item['discount'];
+                $global_discount_amount = $data['discount'];
             }
 
             $total -= $global_discount_amount;
@@ -379,9 +376,32 @@ class InvoiceService extends BaseService
 
             $invoice->save();
 
+            
+
             //Update Loyalty Points
-            $loyaltyPoints = round($invoice->last_paid * 0.05);
-            Customer::where('id', $data['customer_id'])->increment('loyalty', $loyaltyPoints);
+            // $loyaltyPoints = round($invoice->last_paid * 0.05);
+            // Customer::where('id', $data['customer_id'])->increment('loyalty', $loyaltyPoints);
+            if($data['loyalty_discount'] > 0){
+                // Customer::where('id', $data['customer_id'])->decrement('loyalty', $data['loyalty_discount']);
+                // $loyaltyPoints = round($invoice->total_paid * 0.05);
+                // Customer::where('id', $data['customer_id'])->increment('loyalty', $loyaltyPoints);
+
+                $customer = Customer::find($data['customer_id']);
+                
+                // Ensure loyalty points do not go negative
+                $loyaltyToDeduct = min($data['loyalty_discount'], $customer->loyalty);
+
+                // dd($loyaltyToDeduct);
+                
+                Customer::where('id', $data['customer_id'])->decrement('loyalty', $loyaltyToDeduct);
+                
+                $loyaltyPoints = round($invoice->total_paid * 0.05);
+                Customer::where('id', $data['customer_id'])->increment('loyalty', $loyaltyPoints);
+
+            }else{
+                $loyaltyPoints = round($invoice->total_paid * 0.05);
+                Customer::where('id', $data['customer_id'])->increment('loyalty', $loyaltyPoints);
+            }
 
 
 

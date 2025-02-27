@@ -74,6 +74,8 @@ class ProductService extends BaseService
     public function createOrUpdate(array $data, $id = null)
     {
         try {
+            $customTax = $data['igst_tax']+$data['sgst_tax'];
+            $data['custom_tax'] = $customTax;
             if ($id) {
                 try {
                     DB::beginTransaction();

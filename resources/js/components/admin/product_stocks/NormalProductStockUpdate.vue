@@ -15,16 +15,16 @@
                 </th>
             </tr>
             <tr>
-                <th>{{ __("custom.warehouse_name") }}</th>
-                <th width="20%">{{ __("custom.current_stock") }} <small v-if="product.weight_unit">({{ product.weight_unit.name }})</small></th>
-                <th width="20%">{{ __("custom.qty") }} <small v-if="product.weight_unit">({{ product.weight_unit.name }})</small></th>
-                <th>{{ __("custom.price") }}</th>
-                <th>{{ __("custom.customer_buying_price") }}</th>
-                <th>{{ __("custom.adjust_type") }} <small>({{ __("custom.stock")}})</small></th>
-                <th></th>
+                <th width="25%">{{ __("custom.warehouse_name") }}</th>
+                <th width="10%">{{ __("custom.current_stock") }} <small v-if="product.weight_unit">({{ product.weight_unit.name }})</small></th>
+                <th width="10%">{{ __("custom.qty") }} <small v-if="product.weight_unit">({{ product.weight_unit.name }})</small></th>
+                <th width="15%">{{ __("custom.price") }}</th>
+                <th width="15%">{{ __("custom.customer_buying_price") }}</th>
+                <th width="20%">{{ __("custom.adjust_type") }} <small>({{ __("custom.stock")}})</small></th>
+                <th>Action</th>
             </tr>
             <tr v-for="(item, index) in items" :key="index">
-                <td width="30%">
+                <td>
                     <select
                         @change="checkDuplicate(index, $event)"
                         class="form-control"

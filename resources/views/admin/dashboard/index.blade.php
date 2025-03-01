@@ -111,7 +111,7 @@
                     <div class="ic-card-head success">
                         <i class="flaticon-shopping-bag ic-card-icon"></i>
                         <i class="flaticon-shopping-bag big-icon"></i>
-                        <h3>{{ $data['total_sale_amount'] }} {{ currencySymbol() }}</h3>
+                        <h3>{{ currencySymbol() }} {{ $data['total_sale_amount'] }}</h3>
                         <p>{{__('custom.sale_amount')}}</p>
                     </div>
                 </a>
@@ -123,7 +123,7 @@
                     <div class="ic-card-head primary">
                         <i class="flaticon-shopping-bag-1 ic-card-icon"></i>
                         <i class="flaticon-shopping-bag-1 big-icon"></i>
-                        <h3>{{ $data['total_purchase_amount'] }} {{ currencySymbol() }}</h3>
+                        <h3>{{ currencySymbol() }} {{ $data['total_purchase_amount'] }} </h3>
                         <p>{{__('custom.purchase_amount')}}</p>
                     </div>
                 </a>
@@ -220,7 +220,7 @@
                     <div class="ic-card-head">
                         <i class="flaticon-shopping-bag ic-card-icon" style="background-color: #70354c"></i>
                         <i class="flaticon-shopping-bag big-icon"></i>
-                        <h3>{{ $data['total_sale_by_auth_user'] }} {{ currencySymbol() }}</h3>
+                        <h3>{{ currencySymbol() }} {{ $data['total_sale_by_auth_user'] }}</h3>
                         <p>{{__('custom.total')}} {{__('custom.sale_by_you')}}</p>
                     </div>
                 </a>

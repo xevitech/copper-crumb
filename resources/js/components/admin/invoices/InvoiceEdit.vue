@@ -778,6 +778,9 @@ export default {
         this.formData.bank_info = this.invoice.bank_info;
         this.formData.discount = this.invoice.global_discount;
         this.formData.discount_type = this.invoice.global_discount_type;
+        //set table number and loyalty_discount from invoice this will not changed if created
+        this.formData.table_number = this.invoice.table_number;
+        this.formData.loyalty_discount = this.invoice.loyalty_discount;
         this.product_list = this.product_stocks;
 
         if (!this.invoice.customer_id) {

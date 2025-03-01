@@ -98,7 +98,8 @@
                                     <tr>
                                         <th>{{ __('custom.sl') }}#</th>
                                         <th>{{ __('custom.invoice_id') }}</th>
-                                        <th width="10%">{{ __('custom.warehouse') }}</th>
+                                        <th>{{ __('custom.payment_type') }}</th>
+                                        {{-- <th width="10%">{{ __('custom.warehouse') }}</th> --}}
                                         <th width="10%">{{ __('custom.date') }}</th>
                                         <th>{{ __('custom.customer') }}</th>
                                         <th>{{ __('custom.tax') }}</th>
@@ -119,7 +120,8 @@
                                                 <a href="{{ route('admin.invoices.show', $item->id) }}"
                                                    class="btn btn-link" target="_blank">{{ make8digits($item->id) }}</a>
                                             </td>
-                                            <td>{{ optional($item->warehouse)->name }}</td>
+                                            <td>{{ucfirst($item->payment_type)}}</td>
+                                            {{-- <td>{{ optional($item->warehouse)->name }}</td> --}}
                                             <td>{{ custom_date($item->date) }}</td>
                                             <td>
                                                 @if ($item->customer_id)

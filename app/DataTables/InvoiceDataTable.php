@@ -83,10 +83,14 @@ class InvoiceDataTable extends DataTable
                 } else {
                     return ucfirst($item->customer['full_name'] ?? 'Walk-In Customer');
                 }
+             /*
             })->editColumn('warehouse', function ($item) {
                 if ($item->warehouse_id){
                     return optional($item->warehouse)->name;
-                }
+                } */
+            
+            })->editColumn('table_number', function ($item) {
+                return $item->table_number;
             })->editColumn('date', function ($item) {
                 return custom_date($item->date);
             })->editColumn('payment_type', function ($item) {
@@ -150,7 +154,8 @@ class InvoiceDataTable extends DataTable
         return [
             Column::computed('DT_RowIndex', __('custom.sl')),
             Column::make('id', 'id')->title(__('custom.invoice_id')),
-            Column::make('warehouse', 'warehouse.name')->title(__('custom.warehouse')),
+            Column::make('table_number', 'table_number')->title(__('custom.table_number')),
+            // Column::make('warehouse', 'warehouse.name')->title(__('custom.warehouse')),
             Column::make('date', 'date')->title(__('custom.date')),
             Column::make('customer', 'customer')->title(__('custom.customer')),
             Column::make('total', 'total')->title(__('custom.total')),

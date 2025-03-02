@@ -47,6 +47,7 @@ class Invoice extends Model
 
     public const PAYMENT_TYPE_CASH = 'cash';
     public const PAYMENT_TYPE_ONLINE = 'online';
+    public const PAYMENT_TYPE_UPI = 'upi';
     public const PAYMENT_TYPE_PAYPAL = 'paypal';
     public const PAYMENT_TYPE_STRIPE = 'stripe';
     public const PAYMENT_TYPE_BANK = 'bank';

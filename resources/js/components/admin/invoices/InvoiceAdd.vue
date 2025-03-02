@@ -450,24 +450,26 @@
 
                                         <label class="radio-inline radio-image" for="cash">
                                             <span></span>
-                                            <img :src="asset('admin/images/cash.png')" alt="images"/>
+                                            <!-- <img :src="asset('admin/images/cash.png')" alt="images"/> -->
+                                             CASH
                                         </label>
                                     </div>
                                     <div class="payment-method mr-1">
                                         <input
                                             v-model="formData.payment_type"
                                             type="radio"
-                                            value="online"
-                                            id="online"
+                                            value="upi"
+                                            id="upi"
                                             name="payment_type"
                                         />
-                                        <label class="radio-inline radio-image" for="online">
+                                        <label class="radio-inline radio-image" for="upi">
                                             <span></span>
-                                            <img
+                                            <!-- <img
                                                 :src="asset('admin/images/online.png')"
                                                 class="ic-paypal"
                                                 alt="images"
-                                            />
+                                            /> -->
+                                            UPI
                                         </label>
                                     </div>
                                     <div class="payment-method mr-1">
@@ -480,11 +482,12 @@
                                         />
                                         <label class="radio-inline radio-image" for="bank">
                                             <span></span>
-                                            <img
+                                             <!-- <img
                                                 :src="asset('admin/images/bank.png')"
                                                 class="ic-paypal"
                                                 alt="images"
-                                            />
+                                            />  -->
+                                            BANK
                                         </label>
                                     </div>
                                 </div>
@@ -543,7 +546,7 @@
                                         name="is_delivered"
                                         v-model="formData.is_delivered"
                                         class="form-check-input custom-control-input"
-                                        type="checkbox" checked="checked"
+                                        type="checkbox"
                                         id="is_delivered"
                                     />
                                     <label
@@ -843,9 +846,10 @@ export default {
             totalLoyaltyDiscount:0,
             formData: {
                 warehouse_id: this.warehouse_id,
-                payment_type: "cash",
+                // payment_type: "cash",
+                payment_type: "",
                 is_walkin_customer: false,
-                is_delivered: true,
+                is_delivered: false,
                 walkin_customer: {
                     full_name: "",
                     phone: "",

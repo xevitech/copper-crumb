@@ -228,16 +228,29 @@
                                     <input type="radio" value="cash" id="cash" name="payment_type" checked />
                                     <label class="radio-inline radio-image" for="cash">
                                         <span></span>
-                                        <img src="{{ static_asset('admin/images/cash.png') }}" alt="images" />
+                                        {{-- <img src="{{ static_asset('admin/images/cash.png') }}" alt="images" /> --}}
+                                        CASH
                                     </label>
                                 </div>
                                 <div class="payment-method mr-1">
-                                    <input type="radio" value="online" id="online" name="payment_type" />
-                                    <label class="radio-inline radio-image" for="online">
+                                    <input type="radio" value="upi" id="upi" name="payment_type" />
+                                    <label class="radio-inline radio-image" for="upi">
                                         <span></span>
-                                        <img src="{{ static_asset('admin/images/online.png') }}" class="ic-paypal" alt="images" />
+                                        {{-- <img src="{{ static_asset('admin/images/online.png') }}" class="ic-paypal" alt="images" /> --}}
+                                        UPI
                                     </label>
                                 </div>
+
+                                <div class="payment-method mr-1">
+                                    <input type="radio" value="card" id="card" name="payment_type" />
+                                    <label class="radio-inline radio-image" for="card">
+                                        <span></span>
+                                        {{-- <img src="{{ static_asset('admin/images/online.png') }}" class="ic-paypal" alt="images" /> --}}
+                                        CARD
+                                    </label>
+                                </div>
+
+                                {{--
                                 <div class="payment-method mr-1">
                                     <input type="radio" value="bank" id="bank" name="payment_type" />
                                     <label class="radio-inline radio-image" for="bank">
@@ -245,8 +258,9 @@
                                         <img src="{{ static_asset('admin/images/bank.png') }}" class="ic-paypal" alt="images" />
                                     </label>
                                 </div>
+                                --}}
                             </div>
-                            <div id="bank-info">
+                             <div id="bank-info">
                                 <div class="from-group">
                                     <label for="">{{ __("custom.account_number") }}</label>
                                     <input type="text" name="bank_info['ac_no']" class="form-control" />

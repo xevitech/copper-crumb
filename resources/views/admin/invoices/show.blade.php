@@ -166,20 +166,22 @@
                                             @endforeach
                                             @endif
 
-
+                                            @if($invoice->discount_amount > 0)
                                             <tr>
-
                                                 <td class="thick-line text-right" colspan="6">
                                                     <strong>{{ __('custom.discount') }}</strong>
                                                 </td>
                                                 <td class="thick-line">{{ currencySymbol().make2decimal($invoice->discount_amount) }}</td>
                                             </tr>
+                                            @endif
+                                            @if($invoice->loyalty_discount > 0)
                                             <tr>
                                                 <td class="thick-line text-right" colspan="6">
                                                     <strong>{{ __('custom.loyalty_discount') }}</strong>
                                                 </td>
                                                 <td class="thick-line">{{ currencySymbol().make2decimal($invoice->loyalty_discount) }}</td>
                                             </tr>
+                                            @endif
                                             <tr>
                                                 <td class="no-line text-right" colspan="6">
                                                     <strong>{{ __('custom.tax') }}</strong>
@@ -204,6 +206,7 @@
                                                     </p>
                                                 </td>
                                             </tr>
+                                            @if($invoice->saleReturns()->sum('return_total_amount')>0)
                                             <tr>
                                                 <td class="no-line text-right" colspan="6">
                                                     <strong>{{ __('custom.sale_return_amount') }}</strong>
@@ -213,6 +216,7 @@
                                                     </p>
                                                 </td>
                                             </tr>
+                                            @endif
                                             <tr>
                                                 <td class="no-line text-right" colspan="6">
                                                     <strong>{{ __('custom.total_due') }}</strong>

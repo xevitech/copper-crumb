@@ -80,7 +80,7 @@ $authUser = auth()->guard('customer')->check();
         <td colspan="2" style="border-top: 1px solid #333;text-align: right; font-weight: bold">{{ __('custom.discount') }}</td>
         <td colspan="2" style="border-top: 1px solid #333;text-align: right; font-weight: bold">{{ currencySymbol().make2decimal($invoice->discount_amount) }}</td>
     </tr>
-    @if($invoice->loyalty_discount)
+    @if($invoice->loyalty_discount > 0)
     <tr>
         <td colspan="2" style="border-top: 1px solid #333;text-align: right; font-weight: bold">{{ __('custom.loyalty_discount') }}</td>
         <td colspan="2" style="border-top: 1px solid #333;text-align: right; font-weight: bold">{{ currencySymbol().make2decimal($invoice->loyalty_discount) }}</td>

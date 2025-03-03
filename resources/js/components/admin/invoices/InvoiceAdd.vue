@@ -476,20 +476,35 @@
                                         <input
                                             v-model="formData.payment_type"
                                             type="radio"
+                                            value="card"
+                                            id="card"
+                                            name="payment_type"
+                                        />
+                                        <label class="radio-inline radio-image" for="card">
+                                            <span></span>
+                                            CARD
+                                        </label>
+                                    </div>
+                                    <!--
+                                    <div class="payment-method mr-1">
+                                        <input
+                                            v-model="formData.payment_type"
+                                            type="radio"
                                             value="bank"
                                             id="bank"
                                             name="payment_type"
                                         />
                                         <label class="radio-inline radio-image" for="bank">
                                             <span></span>
-                                             <!-- <img
+                                              <img
                                                 :src="asset('admin/images/bank.png')"
                                                 class="ic-paypal"
                                                 alt="images"
-                                            />  -->
+                                            />
                                             BANK
                                         </label>
                                     </div>
+                                     -->
                                 </div>
 
                                 <div class="from-group">
@@ -501,6 +516,8 @@
                                         class="form-control"
                                     />
                                 </div>
+
+                                <!--
 
                                 <div v-if="formData.payment_type == 'bank'">
                                     <div class="from-group">
@@ -527,7 +544,7 @@
                                             format="yyyy-MM-dd"
                                         ></datepicker>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
 
                             <div class="form-grou">

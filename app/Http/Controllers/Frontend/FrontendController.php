@@ -144,7 +144,7 @@ class FrontendController extends Controller
     //front-end without authentication
     public function getActiveProducts()
     {
-        $roducts = Product::where('status', 'active')->get();
+        $roducts = Product::where('status', 'active')->where('available_for','!=','store')->get();
         return response()->json(['data' => $roducts]);
     }
     

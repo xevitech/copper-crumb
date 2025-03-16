@@ -58,6 +58,9 @@ class ProductService extends BaseService
                     $q->where('available_for', '!=', Product::SALE_AVAILABLE_FOR['warehouse']);
                 });
             })
+->whereHas('product', function($q) {
+                $q->where('available_for', '!=', Product::SALE_AVAILABLE_FOR['website']);
+            })
             ->with($with)
             ->where('warehouse_id', $warehouse->id)
             ->where('quantity', '>', 0)
@@ -264,6 +267,9 @@ class ProductService extends BaseService
         ->whereHas('product', function ($q) use ($barcode){
             $q->where('barcode', $barcode);
         })
+->whereHas('product', function($q) {
+                $q->where('available_for', '!=', Product::SALE_AVAILABLE_FOR['website']);
+            })
         ->first();
     }
 
@@ -299,6 +305,9 @@ class ProductService extends BaseService
                     $q->where('available_for', '!=', Product::SALE_AVAILABLE_FOR['warehouse']);
                 });
             })
+->whereHas('product', function($q) {
+                $q->where('available_for', '!=', Product::SALE_AVAILABLE_FOR['website']);
+            })
             ->whereHas('product', function ($q) use ($category_id){
                 $q->where('category_id', $category_id);
             })
@@ -325,6 +334,9 @@ class ProductService extends BaseService
         return $this->model->select($select)->with($with)
             ->when(Auth::guard('customer')->check(), function($q){
                 $q->where('available_for', '!=', Product::SALE_AVAILABLE_FOR['warehouse']);
+            })
+->whereHas('product', function($q) {
+                $q->where('available_for', '!=', Product::SALE_AVAILABLE_FOR['website']);
             })
             ->whereHas('warehouseStockQty', function ($q){
             $q->where('quantity', '>', 0);
@@ -365,6 +377,9 @@ class ProductService extends BaseService
                 $q->where('available_for', '!=', Product::SALE_AVAILABLE_FOR['warehouse']);
             });
         })
+->whereHas('product', function($q) {
+                $q->where('available_for', '!=', Product::SALE_AVAILABLE_FOR['website']);
+            })
         ->whereHas('product', function ($q) use ($search_q){
             $q->where('name', 'like', '%' . $search_q . '%');
             $q->orWhere('sku', 'like', '%' . $search_q . '%');

@@ -443,8 +443,6 @@
                             <p class="error">{{ $message }}</p>
                             @enderror
 
-
-                            {{--
                             <div class="custom-control custom-checkbox">
                                 <label for="" class=" "></label><br>
                                 <input class="form-check-input custom-control-input" {{ $product->is_variant ? 'checked' : '' }} type="checkbox" value="1"
@@ -458,17 +456,14 @@
                             <p class="error">{{ $message }}</p>
                             @enderror
 
-                            <div class="custom-control custom-checkbox">
+                            {{-- <div class="custom-control custom-checkbox">
                                 <label for="" class=" "></label><br>
                                 <input class="form-check-input custom-control-input" type="checkbox" {{ $product->split_sale ? 'checked' : '' }} value="1"
                                        id="split_sale" name="split_sale">
                                 <label class="form-check-label custom-control-label checkbox-label" for="split_sale">
                                     {{ __('custom.is_split_sale')}}
                                 </label>
-                            </div>
-                            --}}
-                            
-                            
+                            </div> --}}
 
                             <div class="form-group mt-2">
                                 <div>

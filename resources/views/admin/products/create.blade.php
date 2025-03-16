@@ -117,6 +117,7 @@
                             <p class="error">{{ $message }}</p>
                             @enderror
                         </div> --}}
+                        
                         {{-- Price  --}}
 
                         <div class="form-group col-sm-6">
@@ -414,7 +415,7 @@
                             @enderror
 
 
-                           {{-- <div class="custom-control custom-checkbox">
+                            <div class="custom-control custom-checkbox">
                                 <label for="" class=" "></label><br>
                                 <input class="form-check-input custom-control-input" type="checkbox" value="1"
                                     id="isVariant" name="is_variant">
@@ -427,7 +428,7 @@
                             <p class="error">{{ $message }}</p>
                             @enderror
 
-                             <div class="custom-control custom-checkbox">
+                             {{-- <div class="custom-control custom-checkbox">
                                 <label for="" class=" "></label><br>
                                 <input class="form-check-input custom-control-input" type="checkbox" value="1"
                                        id="split_sale" name="split_sale">
@@ -464,6 +465,6 @@
 @push('style')
 @endpush
 
-@push('script')-
+@push('script')
 
 @endpush

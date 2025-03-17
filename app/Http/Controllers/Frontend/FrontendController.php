@@ -5,15 +5,28 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\ProductStock;
 use App\Models\{Customer,ProductCategory,CouponProduct,Coupon,Cart,InvoiceItem,NewsletterSubscriber,IcContact};
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
+use App\Services\Product\ProductService;
+use App\Services\Warehouse\WarehouseService;
 
 class FrontendController extends Controller
 {
+    protected $warehouseService;
+    protected $productService;
+
+    public function __construct(
+        ProductService $productService,
+        WarehouseService $warehouseService,
+    ){
+        $this->productService = $productService;
+        $this->warehouseService = $warehouseService;
+    }
      /**
       * customer-Authentication
       * 
@@ -144,15 +157,40 @@ class FrontendController extends Controller
     //front-end without authentication
     public function getActiveProducts()
     {
-        $roducts = Product::where('status', 'active')->where('available_for','!=','store')->get();
-        return response()->json(['data' => $roducts]);
+        // try {
+            
+            $products = ProductStock::with(['product','attribute','attributeItem'])
+                ->whereHas('product', function($q) {
+                    $q->where('status', 'active');
+                })
+                ->whereHas('product', function($q) {
+                    $q->where('available_for', '!=', Product::SALE_AVAILABLE_FOR['store']);
+                })
+                ->get();
+    
+            return response()->json(['data' => $products], 200);
+
+        // } catch (\Exception $e) {
+        //     return response()->json(['error' => $e->getMessage()], 500);
+        // }
     }
     
     
     public function getSingleProduct($id)
     {
-        $product = Product::where('id',$id)->get();
-        return response()->json(['data' => $product]);
+        // try {
+            $product = ProductStock::with(['product','attribute','attributeItem'])->where('product_id',$id)
+            ->whereHas('product', function($q) {
+                $q->where('status', 'active');
+            })
+            ->whereHas('product', function($q) {
+                $q->where('available_for', '!=', Product::SALE_AVAILABLE_FOR['store']);
+            })
+            ->get();
+            return response()->json(['data' => $product]);
+        // } catch (\Exception $e) {
+        //     return response()->json(['error' => $e->getMessage()], 500);
+        // }
     }
     
     public function getAllCategories()

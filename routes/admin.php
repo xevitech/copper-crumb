@@ -9,6 +9,8 @@ use App\Http\Controllers\Admin\Axios\AxiosController;
 use App\Http\Controllers\Admin\Purchase\PurchaseController;
 use App\Http\Controllers\Admin\Purchase\PurchaseReturnController;
 use App\Http\Controllers\Admin\Purchase\PurchaseReceiveController;
+// use App\Http\Controllers\Admin\Blogs\BlogController;
+
 
 // Route::namespace('Admin')->prefix('admin')->as('admin.')->middleware(['auth','isInstalled'])->group(function () {
 Route::namespace('Admin')->prefix('admin')->as('admin.')->group(function () {
@@ -51,6 +53,8 @@ Route::namespace('Admin')->prefix('admin')->as('admin.')->group(function () {
     Route::get('customers/verify/{id}', [CustomersController::class, 'verifyUnverify'])->name('customers.verify');
     // SUPPLIER
     Route::resource('suppliers', Supplier\SuppliersController::class);
+    //BLOG
+    Route::resource('blogs', Blogs\BlogController::class);
     // EXPENSES CATEGORY
     Route::resource('expenses-categories', Expenses\ExpensesCategoriesController::class);
     // EXPENSES

@@ -226,10 +226,23 @@ class InvoiceService extends BaseService
             $invoice->billing_info = $data['billing'];
             $invoice->shipping_info = $data['shipping'];
             $invoice->items_data = $data['items'];
-            // $invoice->total_paid = ($data['payment_type'] == $this->model::PAYMENT_TYPE_CASH || $data['payment_type'] == $this->model::PAYMENT_TYPE_BANK) ? $data['total_paid'] : 0;
-            $invoice->total_paid = ($data['payment_type'] == $this->model::PAYMENT_TYPE_CASH || $data['payment_type'] == $this->model::PAYMENT_TYPE_CARD || $data['payment_type'] == $this->model::PAYMENT_TYPE_UPI) ? $data['total_paid'] : 0;
-            $invoice->last_paid = $data['total_paid'];
-            $invoice->payment_type = $data['payment_type'];
+           
+            // new changes for split bill
+
+            $invoice->total_paid = collect($data['payments'])
+                        // ->where('selected', true)
+                        ->filter(fn ($payment) => ($payment['selected'] ?? false))
+                        ->sum('amount');
+
+            $invoice->last_paid = $invoice->total_paid;
+            $invoice->payment_type = implode(',', collect($data['payments'])
+                                        // ->where('selected', true)
+                                        ->filter(fn ($payment) => ($payment['selected'] ?? false))
+                                        ->pluck('type')
+                                        ->toArray());
+
+
+
             if (isset($data['bank_info'])) {
                 $invoice->bank_info = $data['bank_info'] ?? null;
             }
@@ -316,24 +329,35 @@ class InvoiceService extends BaseService
                 }
             }
 
-
             $this->stockUpdate($data['items']);
 
-            // If update delete old paymets
+            //new changes for split bill
+
+            // Delete old payments if updating
             if ($id) {
                 InvoicePayment::where('invoice_id', $id)->delete();
             }
 
-            // Invoice payment
-            if ($data['payment_type'] == $this->model::PAYMENT_TYPE_CASH || $data['payment_type'] == $this->model::PAYMENT_TYPE_CARD || $data['payment_type'] == $this->model::PAYMENT_TYPE_UPI) {
-                $payment = new InvoicePayment();
-                $payment->invoice_id = $invoice->id;
-                $payment->date = Carbon::parse($data['date'])->format('Y-m-d H:i:s');
-                $payment->payment_type = $data['payment_type'];
-                $payment->amount =  $data['total_paid'];
-                $payment->bank_info = json_encode($invoice->bank_info);
-                $payment->created_by = Auth::id();
-                $payment->save();
+
+            // Store new payments
+            foreach ($data['payments'] as $payment) {
+                if (!isset($payment['selected']) || !$payment['selected']) {
+                    continue; // Ignore unselected payments
+                }
+
+                $invoicePayment = new InvoicePayment();
+                $invoicePayment->invoice_id = $invoice->id;
+                $invoicePayment->date = Carbon::parse($data['date'])->format('Y-m-d H:i:s');
+                $invoicePayment->payment_type = $payment['type'];
+                $invoicePayment->amount = $payment['amount'];
+                $invoicePayment->created_by = Auth::id();
+
+                // Only include bank info for bank payments
+                if ($payment['type'] == 'bank') {
+                    $invoicePayment->bank_info = json_encode($data['bank_info']);
+                }
+
+                $invoicePayment->save();
             }
 
             $xtotal = $gross_total + $total_tax;
@@ -361,14 +385,16 @@ class InvoiceService extends BaseService
             $invoice->discount_amount = $total_discount;
             $invoice->total = $total;
 
-            // Update status
-            if ($data['payment_type'] == $this->model::PAYMENT_TYPE_CASH || $data['payment_type'] == $this->model::PAYMENT_TYPE_UPI || $data['payment_type'] == $this->model::PAYMENT_TYPE_CARD && $data['total_paid'] > 0) {
-                if ($data['total_paid'] >= $total) {
-                    $invoice->status = $this->model::STATUS_PAID;
-                } else {
-                    $invoice->status = $this->model::STATUS_PARTIALLY_PAID;
-                }
+            //new changes for split bill system
+
+            if ($invoice->total_paid >= $total) {
+                $invoice->status = $this->model::STATUS_PAID;
+            } elseif ($invoice->total_paid > 0) {
+                $invoice->status = $this->model::STATUS_PARTIALLY_PAID;
+            } else {
+                $invoice->status = $this->model::STATUS_PENDING;
             }
+
             if(auth()->guard('customer')->check() && $invoice->payment_type  == 'online') {
                 $invoice->status        = $this->model::STATUS_PENDING;
                 $invoice->last_paid     = $total;
@@ -380,31 +406,17 @@ class InvoiceService extends BaseService
             
 
             //Update Loyalty Points
-            // $loyaltyPoints = round($invoice->last_paid * 0.05);
-            // Customer::where('id', $data['customer_id'])->increment('loyalty', $loyaltyPoints);
             if($data['loyalty_discount'] > 0){
-                // Customer::where('id', $data['customer_id'])->decrement('loyalty', $data['loyalty_discount']);
-                // $loyaltyPoints = round($invoice->total_paid * 0.05);
-                // Customer::where('id', $data['customer_id'])->increment('loyalty', $loyaltyPoints);
-
                 $customer = Customer::find($data['customer_id']);
-                
                 // Ensure loyalty points do not go negative
                 $loyaltyToDeduct = min($data['loyalty_discount'], $customer->loyalty);
-
-                // dd($loyaltyToDeduct);
-                
                 Customer::where('id', $data['customer_id'])->decrement('loyalty', $loyaltyToDeduct);
-                
                 $loyaltyPoints = round($invoice->total_paid * 0.05);
                 Customer::where('id', $data['customer_id'])->increment('loyalty', $loyaltyPoints);
-
             }else{
                 $loyaltyPoints = round($invoice->total_paid * 0.05);
                 Customer::where('id', $data['customer_id'])->increment('loyalty', $loyaltyPoints);
             }
-
-
 
             DB::commit();
             return $invoice;

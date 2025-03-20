@@ -47,7 +47,11 @@ class InvoiceRequest extends FormRequest
             'items' => ['array'],
             'items.*.name' => ['required'],
             'items.*.quantity' => ['required'],
-            'items.*.price' => ['required']
+            'items.*.price' => ['required'],
+            // New Rule for Payments for split bill system
+            'payments' => ['required', 'array'],
+            'payments.*.type' => ['required', 'string', Rule::in(['cash', 'upi', 'card'])],
+            'payments.*.amount' => ['required', 'numeric', 'min:0'],
         ];
     }
 }

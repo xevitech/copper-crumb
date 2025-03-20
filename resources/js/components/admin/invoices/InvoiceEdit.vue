@@ -388,6 +388,9 @@
                                     />
                                 </div>
 
+
+
+
                                 
 
                                 <div v-if="formData.payment_type == 'bank'">

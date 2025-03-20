@@ -356,54 +356,25 @@
                             <div class="col-sm-12 p-0">
                                 <label for="" class="w-100">{{ __("custom.payment") }}</label>
                                 <div class="ic-payment-method">
-                                    <div class="payment-method mr-1">
-                                        <input
-                                            v-model="formData.payment_type"
-                                            type="radio"
-                                            value="cash"
-                                            id="cash"
-                                            name="payment_type"
+                                    <div class="payment-method mr-1" v-for="(payment, index) in formData.payments" :key="index">
+                                        
+                                        <label class="radio-inline radio-image" :for="payment.type">
+                                            <input 
+                                            type="checkbox" 
+                                            v-model="payment.selected" 
+                                            :id="payment.type"
                                         />
-
-                                        <label class="radio-inline radio-image" for="cash">
-                                            <span></span>
-                                            <img :src="asset('admin/images/cash.png')" alt="images"/>
+                                            <!-- <span></span> -->
+                                            {{ payment.type.toUpperCase() }}
                                         </label>
-                                    </div>
-                                    <div class="payment-method mr-1">
-                                        <input
-                                            v-model="formData.payment_type"
-                                            type="radio"
-                                            value="online"
-                                            id="paypal"
-                                            name="payment_type"
+                                        <input 
+                                            v-if="payment.selected"
+                                            v-model="payment.amount" 
+                                            type="number" 
+                                            min="0" 
+                                            class="form-control mt-2" 
+                                            @input="updateTotalPaid"
                                         />
-                                        <label class="radio-inline radio-image" for="paypal">
-                                            <span></span>
-                                            <img
-                                                :src="asset('admin/images/online.png')"
-                                                class="ic-paypal"
-                                                alt="images"
-                                            />
-                                        </label>
-                                    </div>
-
-                                    <div class="payment-method mr-1">
-                                        <input
-                                            v-model="formData.payment_type"
-                                            type="radio"
-                                            value="bank"
-                                            id="bank"
-                                            name="payment_type"
-                                        />
-                                        <label class="radio-inline radio-image" for="bank">
-                                            <span></span>
-                                            <img
-                                                :src="asset('admin/images/bank.png')"
-                                                class="ic-paypal"
-                                                alt="images"
-                                            />
-                                        </label>
                                     </div>
                                 </div>
 
@@ -718,7 +689,7 @@ export default {
             is_shipping_same_billing: false,
             formData: {
                 warehouse_id: this.warehouse_id,
-                payment_type: "cash",
+                payment_type: "",
                 is_walkin_customer: false,
                 walkin_customer: {
                     full_name: "",
@@ -761,6 +732,11 @@ export default {
                 discount: 0,
                 discount_type: "percent", // percent, fixed
                 total_paid: 0,
+                payments: [
+                    { type: "cash", amount: 0 },
+                    { type: "upi", amount: 0 },
+                    { type: "card", amount: 0 }
+                ]
             },
         };
     },
@@ -1152,6 +1128,13 @@ export default {
                 total = Number(total) + Number(this.calculateGlobalDiscount());
             }
             return Number(total).toFixed(2);
+        },
+        //update split bill
+        updateTotalPaid() {
+            // Calculate total paid from selected payment methods
+            this.formData.total_paid = this.formData.payments.reduce((sum, payment) => {
+                return sum + Number(payment.amount);
+            }, 0);
         },
         calculateDue() {
             let due = this.calculateTotalWithOutTax() - this.formData.total_paid;

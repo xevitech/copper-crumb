@@ -2925,6 +2925,17 @@ pre[class*=language-] {
   transform: translateY(-50%);
   transition: 0.3s;
 }
+
+.payment-method .radio-image input {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  border: 1px solid #a2a2a2;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: 0.3s;
+}
 @media (max-width: 1366px) {
   .payment-method .radio-image .ic-paypal {
     max-width: 50px;

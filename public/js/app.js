@@ -50612,7 +50612,7 @@ function h(tag, key, args) {
 /******/ 	
 /******/ 	/* webpack/runtime/publicPath */
 /******/ 	(() => {
-/******/ 		__webpack_require__.p = "https://copper-crumb.wloper.com/";
+/******/ 		__webpack_require__.p = "https://copper-crumb.wloper.com/public/";
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */

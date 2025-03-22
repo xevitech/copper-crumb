@@ -388,11 +388,6 @@
                                     />
                                 </div>
 
-
-
-
-                                
-
                                 <div v-if="formData.payment_type == 'bank'">
                                     <div class="from-group">
                                         <label for="">{{ __("custom.account_number") }}</label>

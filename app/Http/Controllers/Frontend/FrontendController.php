@@ -192,12 +192,36 @@ class FrontendController extends Controller
         //     return response()->json(['error' => $e->getMessage()], 500);
         // }
     }
-    
+    /*
     public function getAllCategories()
     {
         $categories = ProductCategory::all();
         return response()->json(['data'=>$categories]);
     }
+        */
+
+    public function getAllCategories()
+    {
+        $categories = ProductCategory::all();
+    
+        // Group categories by parent_id
+        $grouped = $categories->groupBy('parent_id');
+    
+        // Recursive function to format categories
+        $formatCategories = function ($parentId) use ($grouped, &$formatCategories) {
+            return $grouped->get($parentId, collect())->map(function ($category) use ($formatCategories) {
+                return array_merge($category->toArray(), [
+                    'subcategories' => $formatCategories($category->id)
+                ]);
+            });
+        };
+    
+        // Get only parent categories (those with parent_id = null)
+        $structuredCategories = $formatCategories(null);
+    
+        return response()->json(['data' => $structuredCategories]);
+    }
+        
     
     public function getProductByCategory($id)
     {

@@ -116,6 +116,11 @@ class Product extends Model
         return $this->belongsTo(ProductCategory::class, 'category_id');
     }
 
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class, 'brand_id'); 
+    }
+
     /**
      * attributes
      *
@@ -167,6 +172,11 @@ class Product extends Model
     public function weight_unit()
     {
         return $this->belongsTo(WeightUnit::class, 'weight_unit_id', 'id');
+    }
+
+    public function measurement_unit()
+    {
+        return $this->belongsTo(MeasurementUnit::class, 'measurement_unit_id', 'id');
     }
 
     public function allStock()

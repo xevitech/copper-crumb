@@ -154,60 +154,235 @@ class FrontendController extends Controller
         ], 200);
     }
 
-    //front-end without authentication
     public function getActiveProducts()
     {
-        // try {
-            
-            $products = ProductStock::with(['product','attribute','attributeItem'])
-                ->whereHas('product', function($q) {
-                    $q->where('status', 'active');
-                })
-                ->whereHas('product', function($q) {
-                    $q->where('available_for', '!=', Product::SALE_AVAILABLE_FOR['store']);
-                })
-                ->get();
+        $products = ProductStock::with([
+                'product.category', 
+                'product.brand', 
+                'product.weight_unit',
+                'product.measurement_unit',
+                'attribute' => function ($query) {
+                    $query->where('status', 'active'); // Only active attributes
+                },
+            ])
+            ->whereHas('product', function ($q) {
+                $q->where('status', 'active')
+                    ->where('available_for', '!=', Product::SALE_AVAILABLE_FOR['store']);
+            })
+            ->get();
     
-            return response()->json(['data' => $products], 200);
-
-        // } catch (\Exception $e) {
-        //     return response()->json(['error' => $e->getMessage()], 500);
-        // }
+        $formattedProducts = [];
+    
+        foreach ($products as $item) {
+            $product = $item->product;
+            $productId = $product->id;
+    
+            // If the product is not added yet, initialize it
+            if (!isset($formattedProducts[$productId])) {
+                $formattedProducts[$productId] = [
+                    'id' => $productId,
+                    'name' => $product->name,
+                    'sku' => $product->sku,
+                    'barcode' => $product->barcode,
+                    'barcode_image' => $product->barcode_image,
+                    'price' => $product->price,
+                    'customer_buying_price' => $product->customer_buying_price,
+                    'weight' => $product->weight,
+                    'thumb' => $product->thumb,
+                    'sgst_tax' => $product->sgst_tax,
+                    'igst_tax' => $product->igst_tax,
+                    'feature_image' => $product->feature_image,
+                    'image_1' => $product->image_1,
+                    'image_2' => $product->image_2,
+                    'tag_1' => $product->tag_1,
+                    'tag_2' => $product->tag_2,
+                    'tag_3' => $product->tag_3,
+                    'notes' => $product->notes,
+                    'desc' => $product->desc,
+                    'is_variant' => (bool) $product->is_variant,
+                    'category' => [
+                        'id' => $product->category->id ?? null,
+                        'name' => $product->category->name ?? null,
+                        'parent' => !empty($product->category->parent_category) ? [
+                            'id' => $product->category->parent_category->id,
+                            'name' => $product->category->parent_category->name
+                        ] : null,
+                    ],
+                    'brand' => [
+                        'id' => $product->brand->id ?? null,
+                        'name' => $product->brand->name ?? null
+                    ],
+                    'weight_unit' => [
+                        'id' => $product->weight_unit->id ?? null,
+                        'name' => $product->weight_unit->name ?? null
+                    ],
+                    'measurement_unit' => [
+                        'id' => $product->measurement_unit->id ?? null,
+                        'name' => $product->measurement_unit->name ?? null
+                    ],
+                    'created_at' => $product->created_at,
+                    'updated_at' => $product->updated_at,
+                    'tax_status' => $product->tax_status,
+                    'custom_tax' => $product->custom_tax,
+                    'stock' => $product->stock,
+                    'thumb_url' => $product->thumb_url,
+                    'variants' => []
+                ];
+            }
+    
+            // If the product is a variant and has an active attribute
+            if ($product->is_variant && $item->attribute && $item->attribute->status === 'active') {
+                $variantId = $item->attribute->id;
+                $variantName = $item->attribute->name;
+    
+                // Check if the variant already exists in the product array
+                $variantIndex = array_search($variantId, array_column($formattedProducts[$productId]['variants'], 'id'));
+    
+                // If variant doesn't exist, create it
+                if ($variantIndex === false) {
+                    $formattedProducts[$productId]['variants'][] = [
+                        'id' => $variantId,
+                        'name' => $variantName,
+                        'items' => []
+                    ];
+                    $variantIndex = array_key_last($formattedProducts[$productId]['variants']);
+                }
+    
+                // Add all active attribute items under the variant
+                $formattedProducts[$productId]['variants'][$variantIndex]['items'][] = [
+                    'id' => $item->attributeItem->id ?? null,
+                    'name' => $item->attributeItem->name ?? null,
+                    'price' => $item->price,
+                    'customer_buying_price' => $item->customer_buying_price,
+                    'price_for_sale' => $item->price_for_sale,
+                    'stock' => $item->quantity,
+                    'image' => $item->attributeItem->file_url ?? $item->product->thumb_url
+                ];
+            }
+        }
+    
+        // Convert associative array to indexed array
+        return response()->json(['data' => array_values($formattedProducts)], 200);
     }
-    
+        
     
     public function getSingleProduct($id)
     {
-        // try {
-            $product = ProductStock::with(['product','attribute','attributeItem'])->where('product_id',$id)
-            ->whereHas('product', function($q) {
-                $q->where('status', 'active');
-            })
-            ->whereHas('product', function($q) {
-                $q->where('available_for', '!=', Product::SALE_AVAILABLE_FOR['store']);
-            })
-            ->get();
-            return response()->json(['data' => $product]);
-        // } catch (\Exception $e) {
-        //     return response()->json(['error' => $e->getMessage()], 500);
-        // }
+        $products = ProductStock::with([
+            'product.category', 
+            'product.brand', 
+            'product.weight_unit',
+            'product.measurement_unit',
+            'attribute' => function ($query) {
+                $query->where('status', 'active'); // Only active attributes
+            },
+        ])->where('product_id',$id)
+        ->whereHas('product', function ($q) {
+            $q->where('status', 'active')
+                ->where('available_for', '!=', Product::SALE_AVAILABLE_FOR['store']);
+        })
+        ->get();
+
+        $formattedProduct = [];
+
+        foreach ($products as $item) {
+            $product = $item->product;
+            $productId = $product->id;
+
+            // If the product is not added yet, initialize it
+            if (!isset($formattedProduct[$productId])) {
+                $formattedProduct[$productId] = [
+                    'id' => $productId,
+                    'name' => $product->name,
+                    'sku' => $product->sku,
+                    'barcode' => $product->barcode,
+                    'barcode_image' => $product->barcode_image,
+                    'price' => $product->price,
+                    'customer_buying_price' => $product->customer_buying_price,
+                    'weight' => $product->weight,
+                    'thumb' => $product->thumb,
+                    'sgst_tax' => $product->sgst_tax,
+                    'igst_tax' => $product->igst_tax,
+                    'feature_image' => $product->feature_image,
+                    'image_1' => $product->image_1,
+                    'image_2' => $product->image_2,
+                    'tag_1' => $product->tag_1,
+                    'tag_2' => $product->tag_2,
+                    'tag_3' => $product->tag_3,
+                    'notes' => $product->notes,
+                    'desc' => $product->desc,
+                    'is_variant' => (bool) $product->is_variant,
+                    'category' => [
+                        'id' => $product->category->id ?? null,
+                        'name' => $product->category->name ?? null,
+                        'parent' => !empty($product->category->parent_category) ? [
+                            'id' => $product->category->parent_category->id,
+                            'name' => $product->category->parent_category->name
+                        ] : null,
+                    ],
+                    'brand' => [
+                        'id' => $product->brand->id ?? null,
+                        'name' => $product->brand->name ?? null
+                    ],
+                    'weight_unit' => [
+                        'id' => $product->weight_unit->id ?? null,
+                        'name' => $product->weight_unit->name ?? null
+                    ],
+                    'measurement_unit' => [
+                        'id' => $product->measurement_unit->id ?? null,
+                        'name' => $product->measurement_unit->name ?? null
+                    ],
+                    'created_at' => $product->created_at,
+                    'updated_at' => $product->updated_at,
+                    'tax_status' => $product->tax_status,
+                    'custom_tax' => $product->custom_tax,
+                    'stock' => $product->stock,
+                    'thumb_url' => $product->thumb_url,
+                    'variants' => []
+                ];
+            }
+
+            // If the product is a variant and has an active attribute
+            if ($product->is_variant && $item->attribute && $item->attribute->status === 'active') {
+                $variantId = $item->attribute->id;
+                $variantName = $item->attribute->name;
+
+                // Check if the variant already exists in the product array
+                $variantIndex = array_search($variantId, array_column($formattedProduct[$productId]['variants'], 'id'));
+
+                // If variant doesn't exist, create it
+                if ($variantIndex === false) {
+                    $formattedProduct[$productId]['variants'][] = [
+                        'id' => $variantId,
+                        'name' => $variantName,
+                        'items' => []
+                    ];
+                    $variantIndex = array_key_last($formattedProduct[$productId]['variants']);
+                }
+
+                // Add all active attribute items under the variant
+                $formattedProduct[$productId]['variants'][$variantIndex]['items'][] = [
+                    'id' => $item->attributeItem->id ?? null,
+                    'name' => $item->attributeItem->name ?? null,
+                    'price' => $item->price,
+                    'customer_buying_price' => $item->customer_buying_price,
+                    'price_for_sale' => $item->price_for_sale,
+                    'stock' => $item->quantity,
+                    'image' => $item->attributeItem->file_url ?? $item->product->thumb_url
+                ];
+            }
+        }
+
+        // Convert associative array to indexed array
+        return response()->json(['data' => array_values($formattedProduct)], 200);
     }
-    /*
-    public function getAllCategories()
-    {
-        $categories = ProductCategory::all();
-        return response()->json(['data'=>$categories]);
-    }
-        */
 
     public function getAllCategories()
     {
         $categories = ProductCategory::all();
     
-        // Group categories by parent_id
         $grouped = $categories->groupBy('parent_id');
     
-        // Recursive function to format categories
         $formatCategories = function ($parentId) use ($grouped, &$formatCategories) {
             return $grouped->get($parentId, collect())->map(function ($category) use ($formatCategories) {
                 return array_merge($category->toArray(), [
@@ -216,7 +391,6 @@ class FrontendController extends Controller
             });
         };
     
-        // Get only parent categories (those with parent_id = null)
         $structuredCategories = $formatCategories(null);
     
         return response()->json(['data' => $structuredCategories]);

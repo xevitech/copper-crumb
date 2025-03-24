@@ -40,6 +40,8 @@ Route::prefix('v1')->group(function () {
     Route::get('products', [FrontendController::class, 'getActiveProducts']);
     // Route::post('clogin', [FrontendController::class, 'websiteCustomerLogin']);
     Route::get('product/{id}',[FrontendController::class, 'getSingleProduct']);
+    Route::get('/variants/{variantId}/attributes', [FrontendController::class, 'getAttributesByVariant']);
+    Route::get('/product-stock', [FrontendController::class, 'getStockByProductAndAttribute']);
     Route::get('category-product/{id}',[FrontendController::class, 'getProductByCategory']);
     Route::get('categories',[FrontendController::class, 'getAllCategories']);
     Route::post('validate-coupon',[FrontendController::class, 'validateCoupon']);

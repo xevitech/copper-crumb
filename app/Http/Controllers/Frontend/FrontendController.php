@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\Attribute;
+use App\Models\AttributeItem;
 use App\Models\ProductStock;
 use App\Models\{Customer,ProductCategory,CouponProduct,Coupon,Cart,InvoiceItem,NewsletterSubscriber,IcContact};
 use Illuminate\Support\Facades\Auth;
@@ -343,6 +345,7 @@ class FrontendController extends Controller
             }
 
             // If the product is a variant and has an active attribute
+            /*
             if ($product->is_variant && $item->attribute && $item->attribute->status === 'active') {
                 $variantId = $item->attribute->id;
                 $variantName = $item->attribute->name;
@@ -371,10 +374,71 @@ class FrontendController extends Controller
                     'image' => $item->attributeItem->file_url ?? $item->product->thumb_url
                 ];
             }
+            */
+            // If the product is a variant and has an active attribute
+            if ($product->is_variant && $item->attribute && $item->attribute->status === 'active') {
+                $variantId = $item->attribute->id;
+                $variantName = $item->attribute->name;
+    
+                // Check if the variant ID is already present in the array
+                $exists = array_filter($formattedProduct[$productId]['variants'], function ($variant) use ($variantId) {
+                    return $variant['id'] === $variantId;
+                });
+    
+                // Add only if it doesn't already exist
+                if (empty($exists)) {
+                    $formattedProduct[$productId]['variants'][] = [
+                        'id' => $variantId,
+                        'name' => $variantName
+                    ];
+                }
+            }
         }
 
         // Convert associative array to indexed array
         return response()->json(['data' => array_values($formattedProduct)], 200);
+    }
+
+    public function getAttributesByVariant($variantId)
+    {
+
+        $attribute = Attribute::with(['items' => function ($query) {
+            $query->select('id', 'name', 'attribute_id');
+        }])->where('status', 'active')
+          ->where('id', $variantId)
+          ->first();
+    
+        if (!$attribute) {
+            return response()->json(['message' => 'No attribute found for this variant'], 404);
+        }
+    
+        // Extract only the items array with required fields
+        $formattedItems = $attribute->items->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'name' => $item->name,
+                // 'file_url' => $item->file_url,
+            ];
+        });
+
+        // dd($formattedItems->toArray());
+
+        return response()->json(['data' => $formattedItems], 200);
+    }
+
+    public function getStockByProductAndAttribute(Request $request)
+    {
+        $request->validate([
+            'product_id' => 'required|integer',
+            'attribute_item_id' => 'required|integer',
+        ]);
+
+        $stocks = ProductStock::where('product_id', $request->product_id)
+        ->where('attribute_item_id', $request->attribute_item_id)
+        ->get(['id', 'customer_buying_price'])
+        ->makeHidden(['price_for_sale']);
+
+        return response()->json(['data' => $stocks], 200);
     }
 
     public function getAllCategories()

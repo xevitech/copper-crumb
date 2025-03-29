@@ -504,46 +504,64 @@ class FrontendController extends Controller
     {
         $userId = Auth::id();
         $productId = $request->input('product_id');
-        $quantity = $request->input('quantity');
-        $coupon_discount = $request->input('coupon_discount');
+        $quantity = $request->input('quantity', 1);
+        $couponDiscount = $request->input('coupon_discount', 0);
         $amount = $request->input('amount');
+        $isVariant = $request->input('is_varient', 0); // 1 if variant, 0 if simple
+        $attributeId = $request->input('attribute_id'); // Variant group (e.g., size)
+        $attributeItemId = $request->input('attribute_item_id'); // Variant option (e.g., Medium)
+    
+        // Query for an existing cart entry
+        $cartQuery = Cart::where('customer_id', $userId)
+            ->where('product_id', $productId);
 
-        $cartId = Cart::where('customer_id', $userId)->where('product_id',$productId)->pluck('id')->first();
-        if($cartId){
-            $cart = Cart::find($cartId);
-            $cart->quantity += $quantity;
-            if($coupon_discount){
-                $cart->coupon_discount = $coupon_discount;
+           
+    
+        if ($isVariant) {
+           
+            $cartQuery->where('attribute_id', $attributeId)
+                      ->where('attribute_item_id', $attributeItemId);
+        }
+
+        // dd($isVariant,$attributeItemId,$attributeId,$userId,$productId);
+    
+        $cartItem = $cartQuery->first();
+
+        // dd('hjkhj',$cartItem);
+    
+        if ($cartItem) {
+            // If item already in cart, update quantity
+            $cartItem->quantity += $quantity;
+            if ($couponDiscount) {
+                $cartItem->coupon_discount = $couponDiscount;
             }
-            $cart->save();
-
+            $cartItem->save();
+    
             return response()->json([
                 'status' => 'success',
-                'message' => 'Cart Updated!',
-                'cart' => $cart,
+                'message' => 'Cart updated!',
+                'cart' => $cartItem,
             ], 200);
-
-        }else{
-            $cart = Cart::Create(
-                [
-                    'customer_id' => $userId,
-                    'product_id' => $productId,
-                    'quantity' => $quantity,
-                    'coupon_discount' => $coupon_discount,
-                    'amount' => $amount,
-                ],
-            );
+        } else {
+            // Create new cart entry
+            $cartItem = Cart::create([
+                'customer_id' => $userId,
+                'product_id' => $productId,
+                'quantity' => $quantity,
+                'coupon_discount' => $couponDiscount,
+                'amount' => $amount,
+                'attribute_id' => $isVariant ? $attributeId : null,
+                'attribute_item_id' => $isVariant ? $attributeItemId : null,
+            ]);
+    
             return response()->json([
                 'status' => 'success',
                 'message' => 'Product added to cart.',
-                'cart' => $cart,
-            ], 200);
+                'cart' => $cartItem,
+            ], 201);
         }
-        return response()->json([
-            'status' => 'false',
-            'message' => 'Something went wrong!',
-        ], 201);
     }
+    
 
     // Get all cart items for the authenticated customer
     public function getCart(Request $request)

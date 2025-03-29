@@ -16,7 +16,9 @@ class Cart extends Model
         'quantity',
         'customer_id',
         'coupon_discount',
-        'amount'
+        'amount',
+        'attribute_item_id',
+        'attribute_id'
     ];
      /**
      * Define the relationship with the Product model.

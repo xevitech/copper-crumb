@@ -584,9 +584,10 @@ class FrontendController extends Controller
 
         if ($cartItems->isEmpty()) {
             return response()->json([
-                'status' => 'false',
+                'status' => 'success',
+                'cart' => [],
                 'message' => 'No items found in cart'
-            ], 404);
+            ], 200);
         }
 
         $cartData = $cartItems->map(function ($cart) {

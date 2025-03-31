@@ -33,6 +33,7 @@ Route::prefix('v1')->group(function () {
     
         // Cart routes
         Route::post('cart/add', [FrontendController::class, 'addToCart']);
+        Route::post('cart/update-quantity', [FrontendController::class, 'updateCartQuantity']);
         Route::get('/cart', [FrontendController::class, 'getCart']);
         Route::post('cart/remove', [FrontendController::class, 'removeFromCart']);
     });

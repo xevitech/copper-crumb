@@ -553,6 +553,48 @@ class FrontendController extends Controller
             ], 201);
         }
     }
+
+    public function updateCartQuantity(Request $request)
+    {
+        $userId = Auth::id();
+        $productId = $request->input('product_id');
+        $newQuantity = $request->input('quantity');
+        $attributeId = $request->input('attribute_id'); // Nullable
+        $attributeItemId = $request->input('attribute_item_id'); // Nullable
+
+        if (!$productId || !$newQuantity || $newQuantity <= 0) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Invalid request. Please provide a valid product and quantity.'
+            ], 201);
+        }
+
+        $cartQuery = Cart::where('customer_id', $userId)
+            ->where('product_id', $productId);
+
+        if (!is_null($attributeId) && !is_null($attributeItemId)) {
+            $cartQuery->where('attribute_id', $attributeId)
+                    ->where('attribute_item_id', $attributeItemId);
+        }
+
+        $cartItem = $cartQuery->first();
+
+        if (!$cartItem) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Cart item not found.'
+            ], 201);
+        }
+
+        $cartItem->update(['quantity' => $newQuantity]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Cart updated successfully.',
+            'quantity'=> $newQuantity
+        ], 200);
+    }
+
     
 
     // Get all cart items for the authenticated customer

@@ -514,23 +514,16 @@ class FrontendController extends Controller
         // Query for an existing cart entry
         $cartQuery = Cart::where('customer_id', $userId)
             ->where('product_id', $productId);
-
-           
     
         if ($isVariant) {
            
             $cartQuery->where('attribute_id', $attributeId)
                       ->where('attribute_item_id', $attributeItemId);
         }
-
-        // dd($isVariant,$attributeItemId,$attributeId,$userId,$productId);
     
         $cartItem = $cartQuery->first();
-
-        // dd('hjkhj',$cartItem);
     
         if ($cartItem) {
-            // If item already in cart, update quantity
             $cartItem->quantity += $quantity;
             if ($couponDiscount) {
                 $cartItem->coupon_discount = $couponDiscount;
@@ -543,7 +536,6 @@ class FrontendController extends Controller
                 'cart' => $cartItem,
             ], 200);
         } else {
-            // Create new cart entry
             $cartItem = Cart::create([
                 'customer_id' => $userId,
                 'product_id' => $productId,
@@ -564,6 +556,7 @@ class FrontendController extends Controller
     
 
     // Get all cart items for the authenticated customer
+    /*
     public function getCart(Request $request)
     {
         $cartItems = Cart::where('customer_id', Auth::id())->with('product')->get();
@@ -579,6 +572,61 @@ class FrontendController extends Controller
             ], 201);
         }
     }
+    */
+
+    public function getCart(Request $request)
+    {
+        $userId = Auth::id();
+
+        $cartItems = Cart::where('customer_id', $userId)
+            ->with('product') // Load related product
+            ->get();
+
+        if ($cartItems->isEmpty()) {
+            return response()->json([
+                'status' => 'false',
+                'message' => 'No items found in cart'
+            ], 404);
+        }
+
+        $cartData = $cartItems->map(function ($cart) {
+            $isVariant = !is_null($cart->attribute_id) && !is_null($cart->attribute_item_id);
+
+            return [
+                'id' => $cart->id,
+                'product_id' => $cart->product_id,
+                'product_name' => optional($cart->product)->name, // Avoid null errors
+                'quantity' => $cart->quantity,
+                'price' => $cart->amount,
+                'is_variant' => $isVariant,
+                'variant' => $isVariant ? [
+                    'attribute_id' => $cart->attribute_id,
+                    'attribute_name' => $this->getAttributeName($cart->attribute_id),
+                    'attribute_item_id' => $cart->attribute_item_id,
+                    'variant_name' => $this->getVariantName($cart->attribute_item_id) // Get variant name dynamically
+                ] : null,
+                'image' => optional($cart->product)->thumb_url, // Assuming 'image' exists in products table
+            ];
+        });
+
+        return response()->json([
+            'status' => 'success',
+            'cart' => $cartData
+        ], 200);
+    }
+
+    private function getAttributeName($attributeId)
+    {
+        $attribute = Attribute::find($attributeId);
+        return $attribute ? $attribute->name : null;
+    }
+
+    private function getVariantName($attributeItemId)
+    {
+        $variant = AttributeItem::find($attributeItemId);
+        return $variant ? $variant->name : null;
+    }
+
     
     // Remove a product from the cart
     public function removeFromCart(Request $request)

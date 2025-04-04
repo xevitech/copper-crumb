@@ -225,7 +225,7 @@
                             <label for="" class="w-100">{{ __("custom.payment") }}</label>
                             <div class="ic-payment-method">
                                 <div class="payment-method mr-1">
-                                    <input type="radio" value="cash" id="cash" name="payment_type" checked />
+                                    <input type="radio" value="cash" id="cash" name="payment_type" />
                                     <label class="radio-inline radio-image" for="cash">
                                         <span></span>
                                         {{-- <img src="{{ static_asset('admin/images/cash.png') }}" alt="images" /> --}}
@@ -247,6 +247,30 @@
                                         <span></span>
                                         {{-- <img src="{{ static_asset('admin/images/online.png') }}" class="ic-paypal" alt="images" /> --}}
                                         CARD
+                                    </label>
+                                </div>
+
+                                <div class="payment-method mr-1">
+                                    <input type="radio" value="zomato" id="zomato" name="payment_type" />
+                                    <label class="radio-inline radio-image" for="zomato">
+                                        <span></span>
+                                        ZOMATO
+                                    </label>
+                                </div>
+
+                                <div class="payment-method mr-1">
+                                    <input type="radio" value="swiggy" id="swiggy" name="payment_type" />
+                                    <label class="radio-inline radio-image" for="swiggy">
+                                        <span></span>
+                                        SWIGGY
+                                    </label>
+                                </div>
+
+                                <div class="payment-method mr-1">
+                                    <input type="radio" value="dinein" id="dinein" name="payment_type" />
+                                    <label class="radio-inline radio-image" for="dinein">
+                                        <span></span>
+                                        DINEIN
                                     </label>
                                 </div>
 

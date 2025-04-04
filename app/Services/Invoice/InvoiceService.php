@@ -644,7 +644,7 @@ class InvoiceService extends BaseService
         $invoice->last_paid = $data['last_paid'];
         $invoice->payment_type = $data['payment_type'];
 
-        if ($data['payment_type'] == $this->model::PAYMENT_TYPE_CASH || $data['payment_type'] == $this->model::PAYMENT_TYPE_CARD || $data['payment_type'] == $this->model::PAYMENT_TYPE_UPI) {
+        if ($data['payment_type'] == $this->model::PAYMENT_TYPE_CASH || $data['payment_type'] == $this->model::PAYMENT_TYPE_CARD || $data['payment_type'] == $this->model::PAYMENT_TYPE_UPI || $data['payment_type'] == $this->model::PAYMENT_TYPE_ZOMATO || $data['payment_type'] == $this->model::PAYMENT_TYPE_SWIGGY || $data['payment_type'] == $this->model::PAYMENT_TYPE_DINEIN) {
             $invoice->total_paid = $invoice->total_paid + $data['last_paid'];
             $invoice->bank_info = json_encode($data['bank_info']) ?? null;
 
@@ -659,7 +659,7 @@ class InvoiceService extends BaseService
 
         $invoice->save();
 
-        if ($data['payment_type'] == $this->model::PAYMENT_TYPE_CASH || $data['payment_type'] == $this->model::PAYMENT_TYPE_CARD || $data['payment_type'] == $this->model::PAYMENT_TYPE_UPI) {
+        if ($data['payment_type'] == $this->model::PAYMENT_TYPE_CASH || $data['payment_type'] == $this->model::PAYMENT_TYPE_CARD || $data['payment_type'] == $this->model::PAYMENT_TYPE_UPI || $data['payment_type'] == $this->model::PAYMENT_TYPE_ZOMATO || $data['payment_type'] == $this->model::PAYMENT_TYPE_SWIGGY || $data['payment_type'] == $this->model::PAYMENT_TYPE_DINEIN) {
             // Store payment
             $payment = new InvoicePayment();
             $payment->invoice_id = $invoice->id;

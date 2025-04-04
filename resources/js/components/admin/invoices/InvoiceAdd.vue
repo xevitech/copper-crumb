@@ -898,7 +898,10 @@ export default {
                 payments: [
                     { type: "cash", amount: 0 },
                     { type: "upi", amount: 0 },
-                    { type: "card", amount: 0 }
+                    { type: "card", amount: 0 },
+                    { type: "zomato", amount: 0 },
+                    { type: "dinein", amount: 0 },
+                    { type: "swiggy", amount: 0 }
                 ]
             },
         };

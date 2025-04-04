@@ -103,6 +103,15 @@ __webpack_require__.r(__webpack_exports__);
         }, {
           type: "card",
           amount: 0
+        }, {
+          type: "zomato",
+          amount: 0
+        }, {
+          type: "dinein",
+          amount: 0
+        }, {
+          type: "swiggy",
+          amount: 0
         }]
       }
     };

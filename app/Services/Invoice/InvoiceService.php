@@ -118,6 +118,7 @@ class InvoiceService extends BaseService
      *
      * @return void
      */
+    /*
     public function getAllPayments($with = [])
     {
         return InvoicePayment::with($with)
@@ -133,6 +134,30 @@ class InvoiceService extends BaseService
             })
             ->whereNotNull('amount')->get();
     }
+    */
+    public function getAllPayments($with = [], $start = null, $end = null)
+    {
+        return InvoicePayment::with($with)
+            ->when(request('warehouse'), function ($q) {
+                $q->whereHas('invoice.warehouse', function ($q) {
+                    $q->where('warehouse_id', request('warehouse'));
+                });
+            })
+            ->when(auth()->guard('customer')->check(), function ($q) {
+                $q->whereHas('invoice', function ($q) {
+                    $q->where('customer_id', auth()->guard('customer')->id());
+                });
+            })
+            ->when($start, function ($q) use ($start) {
+                $q->whereDate('date', '>=', $start);
+            })
+            ->when($end, function ($q) use ($end) {
+                $q->whereDate('date', '<=', $end);
+            })
+            ->whereNotNull('amount')
+            ->get();
+    }
+
 
     /**
      * filterByDateRange

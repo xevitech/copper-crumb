@@ -87,6 +87,7 @@
                         <div id="section-to-print-payments">
                             <p class="mb-0"><b>{{ __('custom.payments_report') }}:</b> {{ $report_range ?? '' }}</p>
                             <p><b>{{ __('custom.total') }}:</b> {{ currencySymbol().make2decimal($total ?? 0) }}</p>
+                            <div class="table-container">
                             <table class="table table-sm table-bordered table-striped nowrap">
                                 <thead>
                                 <tr>
@@ -124,6 +125,7 @@
                                     </tr>
                                 </tfoot>
                             </table>
+                            </div>
                         </div>
                     @endif
 
@@ -135,6 +137,33 @@
 @endsection
 
 @push('style')
+<style>
+    .table-container {
+        max-height: 500px; /* or whatever height fits your layout */
+        overflow-y: auto;
+        position: relative;
+    }
+
+    .table-container table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    thead th {
+        position: sticky;
+        top: 0;
+        background: white; /* or your theme background */
+        z-index: 2;
+    }
+
+    tfoot th {
+        position: sticky;
+        bottom: 0;
+        background: white;
+        z-index: 1;
+    }
+</style>
 @endpush
 
 @push('script')

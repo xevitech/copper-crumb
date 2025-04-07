@@ -134,6 +134,7 @@ class ReportsController extends Controller
      * @param  mixed $request
      * @return void
      */
+    /*
     public function sales(Request $request)
     {
         $wareHouses = Warehouse::query()->pluck('name', 'id');
@@ -162,10 +163,81 @@ class ReportsController extends Controller
             $total_paid = $data->sum('total_paid');
         }
 
+        $payments = $this->invoiceService->getAllPayments();
+
+        $paymentSummary = [];
+
+        foreach ($payments as $payment) {
+            $type = strtolower($payment['payment_type']); // normalize to lowercase
+            $amount = floatval($payment['amount']); // make sure it's a number
+
+            if (!isset($paymentSummary[$type])) {
+                $paymentSummary[$type] = 0;
+            }
+
+            $paymentSummary[$type] += $amount;
+        }
 
         set_page_meta(__('custom.sales_report'));
-        return view('admin.reports.sales', compact('data', 'report_range', 'gross_total', 'total_paid', 'wareHouses'));
+        return view('admin.reports.sales', compact('data', 'report_range', 'gross_total', 'total_paid', 'wareHouses','paymentSummary'));
     }
+    */
+
+    public function sales(Request $request)
+    {
+        $wareHouses = Warehouse::query()->pluck('name', 'id');
+
+        $gross_total = 0;
+        $total_paid = 0;
+
+        $data = [];
+        $report_range = '';
+        $start = $request->from_date;
+        $end = $request->to_date;
+
+        if ($start && $end) {
+            $report_range = $start . ' - ' . $end;
+            $data = $this->invoiceService->filterByDateRange($start, $end);
+        }
+
+        if (isset($request->q) && $request->q === 'all-time') {
+            $report_range = 'All Time';
+            $data = $this->invoiceService->filterWareHouseWiseAll(['warehouse']);
+        }
+
+        if ($data instanceof Collection) {
+            $gross_total = $data->sum('total');
+            $total_paid = $data->sum('total_paid');
+        }
+
+        // Get filtered payments (based on date/warehouse/customer)
+        $payments = $this->invoiceService->getAllPayments([], $start, $end);
+
+        $paymentSummary = [];
+
+        foreach ($payments as $payment) {
+            $type = strtolower($payment['payment_type']);
+            $amount = floatval($payment['amount']);
+
+            if (!isset($paymentSummary[$type])) {
+                $paymentSummary[$type] = 0;
+            }
+
+            $paymentSummary[$type] += $amount;
+        }
+
+        set_page_meta(__('custom.sales_report'));
+        return view('admin.reports.sales', compact(
+            'data',
+            'report_range',
+            'gross_total',
+            'total_paid',
+            'wareHouses',
+            'paymentSummary'
+        ));
+    }
+
+
 
 
     /**

@@ -93,6 +93,7 @@
                                     :</b> {{ currencySymbol().make2decimal($gross_total - $total_paid) }}
                             </p>
                             <div class="table-responsive">
+                                <div class="table-container">
                                 <table class="table table-sm table-bordered table-striped nowrap">
                                     <thead>
                                     <tr>
@@ -120,7 +121,7 @@
                                                 <a href="{{ route('admin.invoices.show', $item->id) }}"
                                                    class="btn btn-link" target="_blank">{{ make8digits($item->id) }}</a>
                                             </td>
-                                            <td>{{ucfirst($item->payment_type)}}</td>
+                                            <td>{{strtoupper($item->payment_type)}}</td>
                                             {{-- <td>{{ optional($item->warehouse)->name }}</td> --}}
                                             <td>{{ custom_date($item->date) }}</td>
                                             <td>
@@ -142,6 +143,13 @@
                                     @endforeach
                                     </tbody>
                                     <tfoot>
+                                    @foreach($paymentSummary as $key => $value)
+                                    <tr>
+                                        <th colspan="7">{{ strtoupper($key)}}</th>
+                                        <th>{{currencySymbol().make2decimal($value)}}</th>
+                                        <th></th>
+                                    </tr>
+                                    @endforeach
                                     <tr>
                                         <th colspan="7">{{ __('custom.total') }}</th>
                                         <th>{{ currencySymbol().make2decimal($totalAmount) }}</th>
@@ -149,6 +157,7 @@
                                     </tr>
                                     </tfoot>
                                 </table>
+                                </div>
                             </div>
                         </div>
                     @endif
@@ -161,6 +170,33 @@
 @endsection
 
 @push('style')
+<style>
+    .table-container {
+        max-height: 500px; /* or whatever height fits your layout */
+        overflow-y: auto;
+        position: relative;
+    }
+
+    .table-container table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    thead th {
+        position: sticky;
+        top: 0;
+        background: white; /* or your theme background */
+        z-index: 2;
+    }
+
+    tfoot tr th {
+        position: sticky;
+        bottom: 0;
+        background: white;
+        z-index: 1;
+    }
+</style>
 
 @endpush
 

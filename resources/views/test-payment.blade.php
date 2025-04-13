@@ -213,7 +213,7 @@
 
             $.ajax({
                 // url: 'https://2dfe-49-43-99-214.ngrok-free.app/api/v1/checkout',
-                url: 'http://127.0.0.1:9000/api/v1/checkout',
+                url: '{{ url('/api/v1/checkout') }}',
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify(payload),

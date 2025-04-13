@@ -242,7 +242,6 @@ class InvoiceService extends BaseService
                     $invoice->created_by = Auth::id();
                 }
             }
-
             $invoice->date = Carbon::parse($data['date'])->format('Y-m-d H:i:s');
             $invoice->due_date = Carbon::parse($data['due_date'])->format('Y-m-d H:i:s');
             $invoice->customer_id = $data['customer_id'];
@@ -275,7 +274,7 @@ class InvoiceService extends BaseService
             $invoice->loyalty_discount = $data['loyalty_discount'];
             $invoice->global_discount_type = $data['discount_type'];
             $invoice->notes = $data['notes'];
-            $invoice->table_number = $data['table_number'];
+            $invoice->table_number = $data['table_number'] ?? null;
             $invoice->status = $this->model::STATUS_PENDING;
             $invoice->token = Str::random(64);
             $invoice->updated_by = Auth::id();

@@ -637,8 +637,9 @@ class FrontendController extends Controller
 
             return [
                 'id' => $cart->id,
-                'product_id' => $cart->product_id,
-                'product_name' => optional($cart->product)->name, // Avoid null errors
+                'product' => $cart->product,
+                // 'product_id' => $cart->product_id,
+                // 'product_name' => optional($cart->product)->name, // Avoid null errors
                 'quantity' => $cart->quantity,
                 'price' => $cart->amount,
                 'is_variant' => $isVariant,
@@ -648,7 +649,7 @@ class FrontendController extends Controller
                     'attribute_item_id' => $cart->attribute_item_id,
                     'variant_name' => $this->getVariantName($cart->attribute_item_id) // Get variant name dynamically
                 ] : null,
-                'image' => optional($cart->product)->thumb_url, // Assuming 'image' exists in products table
+                // 'image' => optional($cart->product)->thumb_url, // Assuming 'image' exists in products table
             ];
         });
 

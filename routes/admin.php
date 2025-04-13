@@ -11,6 +11,8 @@ use App\Http\Controllers\Admin\Purchase\PurchaseReturnController;
 use App\Http\Controllers\Admin\Purchase\PurchaseReceiveController;
 // use App\Http\Controllers\Admin\Blogs\BlogController;
 
+use App\Http\Controllers\HdfcPaymentController; //hdfc test mode
+
 
 // Route::namespace('Admin')->prefix('admin')->as('admin.')->middleware(['auth','isInstalled'])->group(function () {
 Route::namespace('Admin')->prefix('admin')->as('admin.')->group(function () {
@@ -199,4 +201,15 @@ Route::namespace('Admin')->prefix('admin')->as('admin.')->group(function () {
         Route::get('top-product', 'DashboardController@getTopProduct')
             ->name('get-top-product');
     });
+
+    //hdfc test mode
+    Route::get('/hdfc/test-payment', function () {
+        return view('test-payment');
+    });
+    
+    Route::post('/hdfc/initiate', [HdfcPaymentController::class, 'initiatePayment'])->name('hdfc.initiate');
+    Route::get('/hdfc/response', [HdfcPaymentController::class, 'handleHdfcResponse'])->name('hdfc.response');
+    Route::post('/hdfc/response', [HdfcPaymentController::class, 'handleHdfcResponse'])->name('hdfc.response');
+    
+
 });

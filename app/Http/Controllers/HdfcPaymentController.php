@@ -163,9 +163,9 @@ class HdfcPaymentController extends Controller
             'payment_page_client_id' => config('hdfc.payment_page_client_id'),
             'action' => 'paymentPage',
             'currency' => 'INR',
-            'return_url' => "https://2dfe-49-43-99-214.ngrok-free.app/admin/hdfc/response",
-            // 'return_url' => route('hdfc.response'),
-            'description' => 'Complete your payment for order on Copper and Crumb',
+            // 'return_url' => "https://deb4-49-43-99-93.ngrok-free.app/admin/hdfc/response",
+            'return_url' => url('/admin/hdfc/response'),
+            'description' => 'Descripyion goese here !',
             'first_name' => $data['customer']['first_name'],
             'last_name' => $data['customer']['last_name'],
         ];
@@ -236,12 +236,8 @@ class HdfcPaymentController extends Controller
 
         $originalData = json_decode($session->payload, true);
 
-        // dd($originalData);
-
-        // Now you have everything: amount, email, phone, etc.
-        // Example: return all info to debug
-        return response()->json([
-            'hdfc_response' => $request->all(),
+        return view('payment.success', [
+            'hdfc_response' => $responseData,
             'original_payload' => $originalData
         ]);
 

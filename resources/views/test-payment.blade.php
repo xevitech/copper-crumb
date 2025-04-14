@@ -21,7 +21,7 @@
         <input type="text" name="amount" value="601"><br><br>
     
         <label>Customer ID:</label>
-        <input type="text" name="customer_id" value="3"><br><br>
+        <input type="text" name="customer_id" value="1"><br><br>
 
     
         {{-- <label>Order ID:</label>

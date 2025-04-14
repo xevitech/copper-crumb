@@ -12,6 +12,7 @@ const baseUrl = process.env.APP_URL;
 mix.js('resources/js/app.js', 'public/js').webpackConfig({
     output: {
         chunkFilename: 'js/chunks/[name].js?id=[chunkhash]',
-        publicPath: `${baseUrl}/`,
+        publicPath: `${baseUrl}/public/`, //for live
+        // publicPath: `${baseUrl}/`, // for local
     }
 }).version().vue();

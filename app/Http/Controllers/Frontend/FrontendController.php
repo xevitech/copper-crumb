@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\Blog;
 use App\Models\Attribute;
 use App\Models\AttributeItem;
 use App\Models\ProductStock;
@@ -632,14 +633,22 @@ class FrontendController extends Controller
             ], 200);
         }
 
-        $cartData = $cartItems->map(function ($cart) {
+        $totalTax = 0;
+
+        $cartData = $cartItems->map(function ($cart) use (&$totalTax){
             $isVariant = !is_null($cart->attribute_id) && !is_null($cart->attribute_item_id);
+
+            $product = $cart->product;
+            // Calculate tax if tax_status is included
+            if ($product && $product->tax_status === 'included') {
+                $taxRate = $product->custom_tax ?? 0;
+                $itemTax = ($cart->amount * $taxRate / (100 + $taxRate)) * $cart->quantity;
+                $totalTax += round($itemTax, 2);
+            }
 
             return [
                 'id' => $cart->id,
                 'product' => $cart->product,
-                // 'product_id' => $cart->product_id,
-                // 'product_name' => optional($cart->product)->name, // Avoid null errors
                 'quantity' => $cart->quantity,
                 'price' => $cart->amount,
                 'is_variant' => $isVariant,
@@ -649,13 +658,13 @@ class FrontendController extends Controller
                     'attribute_item_id' => $cart->attribute_item_id,
                     'variant_name' => $this->getVariantName($cart->attribute_item_id) // Get variant name dynamically
                 ] : null,
-                // 'image' => optional($cart->product)->thumb_url, // Assuming 'image' exists in products table
             ];
         });
 
         return response()->json([
             'status' => 'success',
-            'cart' => $cartData
+            'cart' => $cartData,
+            'total_tax' => $totalTax
         ], 200);
     }
 
@@ -804,6 +813,34 @@ class FrontendController extends Controller
 
         // if($name,$email,$subject,$message);
     }
+
+    public function blogs()
+    {
+        $data = Blog::where('status','active')->get();
+
+        return response()->json([
+            'data' => $data
+        ]);
+    }
+
+    public function show($slug)
+    {
+        $blog = Blog::where('slug', $slug)->active()->first();
+
+        if ($blog) {
+            return response()->json([
+                'success' => true,
+                'data' => $blog,
+            ],200);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Blog not found.',
+        ], 202);
+    }
+
+
 
 
 }

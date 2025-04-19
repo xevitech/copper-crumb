@@ -218,6 +218,16 @@
                         </ul>
                     </li>
                 @endcanany
+                {{-- blog --}}
+                @can('Blog')
+                <li class="{{ request()->is('admin/blogs/*') ? 'mm-active': '' }}">
+                    <a class="{{ request()->is('admin/blogs/*') ? 'mm-active' : '' }}"
+                        href="{{ route('admin.blogs.index') }}" class="">
+                        <i class="flaticon-pamphlet"></i><span> {{ __('custom.blogs') }} </span>
+                    </a>
+                </li>
+                @endcan
+                {{-- blog end  --}}
 
                 @can('Customer')
                 <li class="{{ request()->is('admin/customers/*') ? 'mm-active': '' }}">

@@ -5,6 +5,8 @@
 
 <head>
     @include('admin.layouts.partials2._head')
+    <!-- Load CKEditor from your local folder -->
+<script type="text/javascript" src="{{ asset('admin/ckeditor/ckeditor.js') }}"></script>
 </head>
 
 <body class="ic-layout2-body">

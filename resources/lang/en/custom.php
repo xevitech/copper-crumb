@@ -679,6 +679,23 @@ return [
     'profit'             => 'Profit',
     'assets'             => 'Assets',
 
+    'blogs'             => 'Blogs',
+    'blog'              => 'Blog',
+    'add_blog'          => 'Add Blog',
+    'edit_blog'         => 'Edit Blog',
+    'blog_title'        => 'Blog Title',
+    'blog_list'         => 'Blog List',
+    'blog_description'  => 'Blog Description',
+    'blog_create_failed'         => 'Blog Create failed',
+    'blog_create_successful'     => 'Blog Created Successfully',
+    'blog_updated_successful'    => 'Blog Updated Successfully',
+    'blog_updated_at'            => 'Last Updated At',
+    'blog_updated_failed'        => 'Blog Update failed',
+    'blog_deleted_successful'    => 'Blog Deleted Successfully',
+    'blog_deleted_failed'        => 'Blog Delete failed',
+    'blog_image_support_message' => '(Supported type: png, jpg, jpeg)',
+    
+
     'Marketing'         => 'Marketing',
     'coupon'            => 'Coupon',
     'coupon_list'       => 'Coupon list',

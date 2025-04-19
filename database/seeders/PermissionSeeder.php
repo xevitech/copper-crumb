@@ -127,6 +127,12 @@ class PermissionSeeder extends Seeder
                 'List Coupon',
                 'Delete Coupon'
             ],
+            'Blog' => [
+                'Add Blog',
+                'Edit Blog',
+                'List Blog',
+                'Delete Blog'
+            ],
 //            'campaign' => [
 //                'Add Campaign',
 //                'Edit Campaign',
@@ -197,19 +203,32 @@ class PermissionSeeder extends Seeder
         DB::table('permissions')->truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
-        foreach ($permissions as $parent => $child) {
-            $parent_data = \App\Models\Permission::create([
-                'name' => $parent,
-                'guard_name' => 'web'
-            ]);
+        // foreach ($permissions as $parent => $child) {
+        //     $parent_data = \App\Models\Permission::create([
+        //         'name' => $parent,
+        //         'guard_name' => 'web'
+        //     ]);
 
+        //     foreach ($child as $c) {
+        //         \App\Models\Permission::create([
+        //             'name' => $c,
+        //             'guard_name' => 'web',
+        //             'parent_id' => $parent_data->id
+        //         ]);
+        //     }
+        // }
+
+        foreach ($permissions as $parent => $child) {
+            $parent_data = \App\Models\Permission::firstOrCreate(
+                ['name' => $parent, 'guard_name' => 'web']
+            );
+        
             foreach ($child as $c) {
-                \App\Models\Permission::create([
-                    'name' => $c,
-                    'guard_name' => 'web',
-                    'parent_id' => $parent_data->id
-                ]);
+                \App\Models\Permission::firstOrCreate(
+                    ['name' => $c, 'guard_name' => 'web', 'parent_id' => $parent_data->id]
+                );
             }
         }
+        
     }
 }

@@ -6,82 +6,83 @@ namespace App\Http\Controllers\Admin\Blogs;
 use App\Http\Controllers\Controller;
 use App\DataTables\BlogDataTable;
 use Illuminate\Http\Request;
+use App\Http\Requests\BlogRequest;
+use App\Services\Blog\BlogService;
 use App\Models\Blog;
 use Illuminate\Support\Facades\Storage;
 
 class BlogController extends Controller
 {
-    public function index()
+    protected $blogService;
+
+    public function __construct(BlogService $blogService)
     {
-        $blogs = Blog::latest()->get();
-        return view('admin.blogs.index', compact('blogs'));
+        $this->blogService = $blogService;
+
+        $this->middleware(['permission:List Blog'])->only(['index']);
+        $this->middleware(['permission:Add Blog'])->only(['create']);
+        $this->middleware(['permission:Edit Blog'])->only(['edit']);
+        $this->middleware(['permission:Delete Blog'])->only(['destroy']);
     }
+
+    public function index(BlogDataTable $dataTable)
+    {
+        set_page_meta(__('custom.blog'));
+        return $dataTable->render('admin.blogs.index');
+    }
+
     public function create()
     {
+        set_page_meta(__('custom.add_blog'));
         return view('admin.blogs.create');
     }
-    public function store(Request $request)
+    public function store(BlogRequest $request)
     {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required',
-            'feature_image' => 'nullable|image|max:2048',
-        ]);
+        $data = $request->validated();
 
-        $featureImagePath = null;
-        if ($request->hasFile('feature_image')) {
-            $featureImagePath = $request->file('feature_image')->store('blog_images', 'public');
+        if ($blog = $this->blogService->createOrUpdateWithFile($data, 'banner')) {
+            flash(__('custom.blog_create_successful'))->success();
+        } else {
+            flash(__('custom.blog_create_failed'))->error();
         }
 
-        Blog::create([
-            'title' => $request->title,
-            'description' => $request->description,
-            'feature_image' => $featureImagePath,
-        ]);
-
-        return redirect()->route('admin.blogs.index')->with('success', 'Blog created successfully.');
+        return redirect()->route('admin.blogs.index');
     }
 
-    public function show(Blog $blog)
+    public function show($id)
     {
-        return response()->json($blog);
+        //
     }
 
-    public function edit(Blog $blog)
+    public function edit($id)
     {
-        return view('blogs.edit', compact('blog'));
+        $blog = $this->blogService->get($id);
+
+        set_page_meta(__('custom.edit_blog'));
+        return view('admin.blogs.edit', compact('blog'));
     }
 
-    public function update(Request $request, Blog $blog)
+    public function update(BlogRequest $request, $id)
     {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required',
-            'feature_image' => 'nullable|image|max:2048',
-        ]);
+        $data = $request->validated();
 
-        if ($request->hasFile('feature_image')) {
-            if ($blog->feature_image) {
-                Storage::disk('public')->delete($blog->feature_image);
-            }
-            $blog->feature_image = $request->file('feature_image')->store('blog_images', 'public');
+        if ($this->blogService->createOrUpdateWithFile($data, 'banner', $id)) {
+            flash(__('custom.blog_updated_successful'))->success();
+        } else {
+            flash(__('custom.blog_updated_failed'))->error();
         }
 
-        $blog->update([
-            'title' => $request->title,
-            'description' => $request->description,
-        ]);
-
-        return redirect()->route('admin.blogs.index')->with('success', 'Blog updated successfully.');
+        return redirect()->route('admin.blogs.index');
     }
 
-    public function destroy(Blog $blog)
+    public function destroy($id)
     {
-        if ($blog->feature_image) {
-            Storage::disk('public')->delete($blog->feature_image);
+        if ($this->blogService->delete($id)) {
+            flash(__('custom.blog_deleted_successful'))->success();
+        } else {
+            flash(__('custom.blog_deleted_failed'))->error();
         }
 
-        $blog->delete();
-        return redirect()->route('admin.blogs.index')->with('success', 'Blog deleted successfully.');
+        return redirect()->route('admin.blogs.index');
     }
 }

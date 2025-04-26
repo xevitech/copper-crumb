@@ -19,6 +19,6 @@ class Order extends Model
     // Relationship with ic_payment_sessions
     public function paymentSession()
     {
-        return $this->belongsTo(IcPaymentSession::class, 'payment_session_id');
+        return $this->belongsTo(PaymentSession::class, 'payment_session_id');
     }
 }

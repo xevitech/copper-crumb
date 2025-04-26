@@ -41,6 +41,9 @@ Route::prefix('v1')->group(function () {
         Route::get('/cart', [FrontendController::class, 'getCart']);
         Route::post('cart/remove', [FrontendController::class, 'removeFromCart']);
     });
+
+    Route::get('orders', [FrontendController::class, 'getOrders']);
+    Route::post('order/detail',[FrontendController::class, 'getOrderDetail']);
  
     Route::get('products', [FrontendController::class, 'getActiveProducts']);
     // Route::post('clogin', [FrontendController::class, 'websiteCustomerLogin']);

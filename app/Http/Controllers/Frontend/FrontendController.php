@@ -9,6 +9,8 @@ use App\Models\Blog;
 use App\Models\Attribute;
 use App\Models\AttributeItem;
 use App\Models\ProductStock;
+use App\Models\PaymentSession;
+use App\Models\Order;
 use App\Models\{Customer,ProductCategory,CouponProduct,Coupon,Cart,InvoiceItem,NewsletterSubscriber,IcContact};
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -801,14 +803,14 @@ class FrontendController extends Controller
                 'success' => true,
                 'message' => 'Contact saved successfully!',
                 'data' => $contact,
-            ], 201);
+            ], 200);
         } catch (\Exception $e) {
             // Handle unexpected errors
             return response()->json([
                 'success' => false,
                 'message' => 'Something went wrong!',
                 'error' => $e->getMessage(),
-            ], 500);
+            ], 201);
         }
     
 
@@ -821,8 +823,14 @@ class FrontendController extends Controller
     {
         $data = Blog::where('status','active')->get();
 
+        if ($data) {
+            return response()->json([
+                'data' => $data
+            ]);
+        }
+
         return response()->json([
-            'data' => $data
+            'data' => []
         ]);
     }
 
@@ -839,9 +847,65 @@ class FrontendController extends Controller
 
         return response()->json([
             'success' => false,
-            'message' => 'Blog not found.',
+            'data' => []
         ], 202);
     }
+
+    public function getOrders()
+    {
+        $orders = Order::with('paymentSession')->get();
+
+        if ($orders->isEmpty()) {
+            return response()->json([
+                'status'=> false,
+                'message' => 'Order not found',
+                'data' => []
+            ],201);
+        }
+
+        $orders->each(function ($order) {
+            if ($order->paymentSession) {
+                $order->paymentSession->payload = json_decode($order->paymentSession->payload, true);
+                $order->paymentSession->invoice_data = json_decode($order->paymentSession->invoice_data, true);
+            }
+        });
+
+        return response()->json([
+            'status'=> true,
+            'message' => 'Order list',
+            'data' => $orders
+        ]);
+        
+    }
+
+    public function getOrderDetail(Request $request)
+    {
+        $request->validate([
+            'order_id' => 'required|string'
+        ]);
+
+        $order = PaymentSession::with('orders')
+            ->where('order_id', $request->order_id)
+            ->first();
+
+        if (!$order) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Order not found',
+                'data' => []
+            ], 201);
+        }
+
+        $order->payload = json_decode($order->payload, true);
+        $order->invoice_data = json_decode($order->invoice_data, true);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Order details',
+            'data' => $order
+        ], 201);
+    }
+
 
 
 

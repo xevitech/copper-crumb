@@ -14,6 +14,8 @@ class Order extends Model
     protected $fillable = [
         'payment_session_id',
         'payment_status',
+        'customer_id',
+        'invoice_id'
     ];
 
     // Relationship with ic_payment_sessions

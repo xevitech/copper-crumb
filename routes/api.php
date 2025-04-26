@@ -40,10 +40,12 @@ Route::prefix('v1')->group(function () {
         Route::post('cart/update-quantity', [FrontendController::class, 'updateCartQuantity']);
         Route::get('/cart', [FrontendController::class, 'getCart']);
         Route::post('cart/remove', [FrontendController::class, 'removeFromCart']);
+        //orders
+        Route::get('orders', [FrontendController::class, 'getOrders']);
+        Route::post('order/detail',[FrontendController::class, 'getOrderDetail']);
     });
 
-    Route::get('orders', [FrontendController::class, 'getOrders']);
-    Route::post('order/detail',[FrontendController::class, 'getOrderDetail']);
+    
  
     Route::get('products', [FrontendController::class, 'getActiveProducts']);
     // Route::post('clogin', [FrontendController::class, 'websiteCustomerLogin']);

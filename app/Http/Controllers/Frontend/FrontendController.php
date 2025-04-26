@@ -117,6 +117,9 @@ class FrontendController extends Controller
     {
         // Validate the request
         $validatedData = $request->validate([
+            'first_name' => 'nullable|string|max:255',
+            'last_name' => 'nullable|string|max:255',
+            'phone' => 'nullable|string|max:255',
             'address_line_1' => 'nullable|string|max:255',
             'address_line_2' => 'nullable|string|max:255',
             'country' => 'nullable|string|max:100',
@@ -464,7 +467,7 @@ class FrontendController extends Controller
     
     public function getProductByCategory($id)
     {
-        $products = Product::where('category_id',$id)->get();
+        $products = Product::where('category_id',$id)->where('available_for', '!=', Product::SALE_AVAILABLE_FOR['store'])->get();
         return response()->json(['data'=>$products]);
     }
     
@@ -709,7 +712,7 @@ class FrontendController extends Controller
                 ->limit(5)
                 ->pluck('product_id');
 
-        $data = Product::whereIn('id', $most_sale_ids)->where('status','active')->get();
+        $data = Product::whereIn('id', $most_sale_ids)->where('status','active')->where('available_for', '!=', Product::SALE_AVAILABLE_FOR['store'])->get();
         if($data){
             return response()->json([
                 'status' => 'success',

@@ -12,6 +12,7 @@ use App\Http\Requests\InvoiceRequest;
 use App\Services\Invoice\InvoiceService;
 use App\Services\Customer\CustomerService;
 use App\Models\PaymentSession;
+use App\Models\Order;
 
 class HdfcPaymentController extends Controller
 {
@@ -57,9 +58,9 @@ class HdfcPaymentController extends Controller
             'payment_page_client_id' => config('hdfc.payment_page_client_id'),
             'action' => 'paymentPage',
             'currency' => 'INR',
-            // 'return_url' => "https://deb4-49-43-99-93.ngrok-free.app/admin/hdfc/response",
-            'return_url' => url('https://copperandcrumb.in/order/success'),
-            'description' => 'Descripyion goese here !',
+            'return_url' => "https://a948-49-43-99-87.ngrok-free.app/admin/hdfc/response",
+            // 'return_url' => url('https://copperandcrumb.in/order/success'),
+            'description' => 'Description goes here !',
             'first_name' => $data['customer']['first_name'],
             'last_name' => $data['customer']['last_name'],
         ];
@@ -106,22 +107,30 @@ class HdfcPaymentController extends Controller
 
     public function handleHdfcResponse(Request $request)
     {
-        // dd('sdsdsd');
         $responseData = $request->all();
 
         $orderId = $request->input('order_id');
 
         $session = PaymentSession::where('order_id', $orderId)->first();
 
-        // dd($session);
 
         if (!$session) {
             return response()->json(['error' => 'Payment session not found.'], 202);
         }
 
-        $invoiceData = json_decode($session->invoice_data, true);
-        // dd($invoiceData);
-        $invoice = $this->invoiceService->storeOrUpdate($invoiceData);
+        // dd($responseData['status']);
+
+        Order::updateOrCreate(
+            ['payment_session_id' => $session->id], // Search by this
+            [
+                'payment_status' => $responseData['status'],
+            ]
+        );
+
+        if($responseData['status']==='CHARGED'){
+            $invoiceData = json_decode($session->invoice_data, true);
+            $invoice = $this->invoiceService->storeOrUpdate($invoiceData);
+        }
 
         $originalData = json_decode($session->payload, true);
 

@@ -12,4 +12,10 @@ class PaymentSession extends Model
     protected $table = 'payment_sessions';
 
     protected $fillable = ['order_id', 'payload','invoice_data'];
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'payment_session_id');
+    }
+
 }

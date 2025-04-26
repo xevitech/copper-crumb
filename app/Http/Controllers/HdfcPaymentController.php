@@ -28,19 +28,21 @@ class HdfcPaymentController extends Controller
     public function initiatePayment(InvoiceRequest $request)
     {
         $data = $request->validated();
+        $userId = auth()->guard('customer')->user()->id;
+        // $userId = 1;
 
-        if (!$data['customer_id']) {
+        if (!$userId) {
             $data['customer'] = $data['walkin_customer'];
         } else {
-            $customer = $this->customerService->get($data['customer_id']);
+            $customer = $this->customerService->get($userId);
             $data['customer'] = $customer;
         }
 
         $amount = $data['payments'][0]['amount'];
         $orderId = 'CCORD' . time();
 
-        if (is_array($data['customer']) && isset($data['customer']['id'])) {
-            $customerId = $data['customer']['id'];
+        if (is_array($data['customer']) && !empty($userId)) {
+            $customerId = $userId;
         } else {
             $customerId = $data['customer']['full_name'];
             $nameParts = explode(' ', trim($customerId), 2);
@@ -107,6 +109,9 @@ class HdfcPaymentController extends Controller
 
     public function handleHdfcResponse(Request $request)
     {
+        $customerId = auth()->guard('customer')->user()->id;
+        // $customerId = 1;
+
         $responseData = $request->all();
 
         $orderId = $request->input('order_id');
@@ -120,17 +125,22 @@ class HdfcPaymentController extends Controller
 
         // dd($responseData['status']);
 
+        
+        $invoiceId = null; 
+        if($responseData['status']==='CHARGED'){
+            $invoiceData = json_decode($session->invoice_data, true);
+            $invoice = $this->invoiceService->storeOrUpdate($invoiceData);
+            $invoiceId = $invoice->id;
+        }
+
         Order::updateOrCreate(
             ['payment_session_id' => $session->id], // Search by this
             [
                 'payment_status' => $responseData['status'],
+                'invoice_id' => $invoiceId,  // Use invoice_id if available
+                'customer_id' => $customerId,
             ]
         );
-
-        if($responseData['status']==='CHARGED'){
-            $invoiceData = json_decode($session->invoice_data, true);
-            $invoice = $this->invoiceService->storeOrUpdate($invoiceData);
-        }
 
         $originalData = json_decode($session->payload, true);
 

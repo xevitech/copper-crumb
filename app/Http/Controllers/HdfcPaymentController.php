@@ -28,21 +28,21 @@ class HdfcPaymentController extends Controller
     public function initiatePayment(InvoiceRequest $request)
     {
         $data = $request->validated();
-        $userId = auth()->guard('customer')->user()->id;
-        // $userId = 1;
+        // $userId = auth()->guard('customer')->user()->id;
 
-        if (!$userId) {
+        if (!$data['customer_id']) {
             $data['customer'] = $data['walkin_customer'];
         } else {
-            $customer = $this->customerService->get($userId);
+            $customer = $this->customerService->get($data['customer_id']);
             $data['customer'] = $customer;
         }
 
         $amount = $data['payments'][0]['amount'];
         $orderId = 'CCORD' . time();
 
-        if (is_array($data['customer']) && !empty($userId)) {
-            $customerId = $userId;
+        if (isset($data['customer']['id'])) {
+            // if (is_array($data['customer']) && isset($data['customer']['id'])) {
+            $customerId = $data['customer']['id'];
         } else {
             $customerId = $data['customer']['full_name'];
             $nameParts = explode(' ', trim($customerId), 2);
@@ -54,7 +54,7 @@ class HdfcPaymentController extends Controller
         $payload = [
             'order_id' => $orderId,
             'amount' => $amount,
-            'customer_id' => $customerId,
+            'customer_id' => $orderId,
             'customer_email' => $data['customer']['email'],
             'customer_phone' => $data['customer']['phone'],
             'payment_page_client_id' => config('hdfc.payment_page_client_id'),
@@ -67,13 +67,11 @@ class HdfcPaymentController extends Controller
             'last_name' => $data['customer']['last_name'],
         ];
 
-        // Initiate payment (before redirecting)
         PaymentSession::create([
             'order_id' => $orderId,
             'payload' => json_encode($payload),
             'invoice_data' => json_encode($data),
         ]);
-
 
         try {
             $response = Http::withHeaders([
@@ -109,40 +107,38 @@ class HdfcPaymentController extends Controller
 
     public function handleHdfcResponse(Request $request)
     {
-        $customerId = auth()->guard('customer')->user()->id;
-        // $customerId = 1;
-
         $responseData = $request->all();
-
         $orderId = $request->input('order_id');
-
         $session = PaymentSession::where('order_id', $orderId)->first();
-
 
         if (!$session) {
             return response()->json(['error' => 'Payment session not found.'], 202);
         }
-
-        // dd($responseData['status']);
-
         
         $invoiceId = null; 
+        $customerId = null;
+        
         if($responseData['status']==='CHARGED'){
             $invoiceData = json_decode($session->invoice_data, true);
             $invoice = $this->invoiceService->storeOrUpdate($invoiceData);
             $invoiceId = $invoice->id;
+            if($invoiceData['customer_id']){
+                $customerId = (int)$invoiceData['customer_id'];
+            }else{
+                $customerId = null;
+            }
+            
         }
+        $originalData = json_decode($session->payload, true);
 
         Order::updateOrCreate(
-            ['payment_session_id' => $session->id], // Search by this
+            ['payment_session_id' => $session->id],
             [
                 'payment_status' => $responseData['status'],
-                'invoice_id' => $invoiceId,  // Use invoice_id if available
+                'invoice_id' => $invoiceId,
                 'customer_id' => $customerId,
             ]
         );
-
-        $originalData = json_decode($session->payload, true);
 
         return view('payment.success', [
             'hdfc_response' => $responseData,

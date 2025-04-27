@@ -853,8 +853,8 @@ class FrontendController extends Controller
 
     public function getOrders()
     {
-        $userId = auth()->guard('customer')->user()->id;
-        // $userId = 1;
+        $userId = Auth()->id();
+
         $orders = Order::with('paymentSession')->where('customer_id',$userId)->get();
 
         if ($orders->isEmpty()) {
@@ -886,8 +886,7 @@ class FrontendController extends Controller
             'order_id' => 'required|string'
         ]);
 
-        $userId = auth()->guard('customer')->user()->id;
-        // $userId=1;
+        $userId = Auth()->id();
 
         $order = PaymentSession::with('orders')
             ->where('order_id', $request->order_id)

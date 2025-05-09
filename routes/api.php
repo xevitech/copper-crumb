@@ -30,6 +30,9 @@ Route::prefix('v1')->group(function () {
     Route::post('login', [FrontendController::class, 'login']);
 
     Route::middleware('auth:api_customer')->group(function () {
+        //Auth
+        Route::post('/reset/password', [FrontendController::class, 'resetPassword']);
+
         // Customer details and logout
         Route::get('/customer-details', [FrontendController::class, 'user']);
         Route::post('/logout', [FrontendController::class, 'logout']);
@@ -43,6 +46,7 @@ Route::prefix('v1')->group(function () {
         //orders
         Route::get('orders', [FrontendController::class, 'getOrders']);
         Route::post('order/detail',[FrontendController::class, 'getOrderDetail']);
+
     });
 
     

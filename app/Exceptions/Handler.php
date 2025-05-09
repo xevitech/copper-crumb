@@ -63,4 +63,21 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    //api login token failure handle
+
+    public function render($request, Throwable $exception)
+    {
+        // Force JSON response if unauthenticated
+        if ($exception instanceof AuthenticationException) {
+            if ($request->is('api/*') || $request->expectsJson()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Unauthenticated.',
+                ], 202);
+            }
+        }
+
+        return parent::render($request, $exception);
+    }
 }

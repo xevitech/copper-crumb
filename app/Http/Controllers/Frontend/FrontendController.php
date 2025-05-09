@@ -913,6 +913,68 @@ class FrontendController extends Controller
         ], 201);
     }
 
+    // public function resetPassword(Request $request)
+    // {
+    //     // dd(Auth()->user());
+    //     // Validate the request
+    //     $validated = $request->validate([
+    //         'password' => 'required|string|min:6|confirmed',
+    //     ]);
+    
+    //     $customer = Auth()->user(); // already authenticated via token
+    
+    //     $customer->password = Hash::make($validated['password']);
+    //     $customer->save();
+    
+    //     return response()->json([
+    //         'status' => true,
+    //         'message' => 'Password updated successfully.'
+    //     ]);
+    // }
+
+    public function resetPassword(Request $request)
+    {
+        try {
+            // Check if authenticated user exists
+            $customer = auth()->user();
+            if (!$customer) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Unauthorized access.',
+                ], 202);
+            }
+
+            // Validate the request
+            $validated = $request->validate([
+                'password' => 'required|string|min:6|confirmed',
+            ]);
+
+            // Update password
+            $customer->password = Hash::make($validated['password']);
+            $customer->save();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Password updated successfully.',
+            ]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $firstMessage = collect($e->errors())->flatten()->first();
+            return response()->json([
+                'status' => false,
+                'message' => $firstMessage,
+            ], 202);
+        } catch (\Exception $e) {
+            \Log::error('Password reset error: ' . $e->getMessage());
+            
+            return response()->json([
+                'status' => false,
+                'message' => 'Something went wrong. Please try again later.',
+            ], 202);
+        }
+    }
+
+
 
 
 

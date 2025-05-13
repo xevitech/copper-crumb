@@ -57,6 +57,9 @@ class Customer extends Authenticatable
         "created_by",
         "updated_by",
         "loyalty",
+        "otp",
+        "otp_verified_at",
+        "otp_expires_at"
     ];
     protected $hidden = [
         'password',

@@ -32,7 +32,6 @@ Route::prefix('v1')->group(function () {
     Route::middleware('auth:api_customer')->group(function () {
         //Auth
         Route::post('/reset/password', [FrontendController::class, 'resetPassword']);
-
         // Customer details and logout
         Route::get('/customer-details', [FrontendController::class, 'user']);
         Route::post('/logout', [FrontendController::class, 'logout']);
@@ -48,6 +47,11 @@ Route::prefix('v1')->group(function () {
         Route::post('order/detail',[FrontendController::class, 'getOrderDetail']);
 
     });
+
+    //forgot password
+    Route::post('/forgot/password', [FrontendController::class, 'forgotPassword']);
+    Route::post('/verify/otp', [FrontendController::class, 'verifyOtp']);
+    Route::post('/create/password', [FrontendController::class, 'createPassword']);
 
     
  

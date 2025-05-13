@@ -19,6 +19,8 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use App\Services\Product\ProductService;
 use App\Services\Warehouse\WarehouseService;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SendOtpMail;
 
 class FrontendController extends Controller
 {
@@ -973,6 +975,174 @@ class FrontendController extends Controller
             ], 202);
         }
     }
+
+    public function forgotPassword(Request $request)
+    {
+        try {
+            // Validate email
+            $validated = $request->validate([
+                'email' => 'required|email|exists:customers,email',
+            ]);
+
+            // Find customer by email
+            $customer = Customer::where('email', $validated['email'])->first();
+
+            if (!$customer) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Customer not found.',
+                ], 202);
+            }
+
+            // dd('##################',$customer->email);
+            $otp = rand(100000, 999999);
+            // Generate and store OTP (or use your own reset flow)
+            // dd($request->email,$otp);
+            $customer->update([
+                'otp' => $otp,
+                'otp_expires_at' => now()->addMinutes(10),
+                'otp_verified_at' => null,
+            ]);
+
+            // dd($otp);
+
+            Mail::to($customer->email)->send(new SendOtpMail($otp));
+
+            return response()->json([
+                'status' => true,
+                'message' => 'OTP has been sent to your email address.',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $firstMessage = collect($e->errors())->flatten()->first();
+
+            return response()->json([
+                'status' => false,
+                'message' => $firstMessage,
+            ], 202);
+        } catch (\Exception $e) {
+            // \Log::error('Forgot password error: ' . $e->getMessage());
+
+            return response()->json([
+                'status' => false,
+                'message' => 'Something went wrong. Please try again later.',
+            ], 202);
+        }
+    }
+
+    public function verifyOtp(Request $request)
+    {
+        try {
+            // Validate request input
+            $validated = $request->validate([
+                'email' => 'required|email|exists:customers,email',
+                'otp' => 'required|digits:6',
+            ]);
+
+            // Retrieve customer
+            $customer = Customer::where('email', $validated['email'])->first();
+
+            // Check if OTP matches and is not expired
+            if (
+                !$customer->otp ||
+                $customer->otp !== $validated['otp'] ||
+                now()->greaterThan($customer->otp_expires_at)
+            ) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Invalid or expired OTP.',
+                ], 202);
+            }
+
+            // Optional: Invalidate the OTP after successful verification
+            $customer->otp = null;
+            $customer->otp_expires_at = null;
+            $customer->otp_verified_at = now();
+            $customer->save();
+
+            //  OTP is valid
+            return response()->json([
+                'status' => true,
+                'message' => 'OTP verified successfully.',
+                'verified_at' => $customer->otp_verified_at,
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $firstMessage = collect($e->errors())->flatten()->first();
+
+            return response()->json([
+                'status' => false,
+                'message' => $firstMessage,
+            ], 202);
+        } catch (\Exception $e) {
+            // Log::error('OTP verification error: ' . $e->getMessage());
+
+            return response()->json([
+                'status' => false,
+                'message' => 'Something went wrong. Please try again later.',
+            ], 202);
+        }
+    }
+
+    public function createPassword(Request $request)
+    {
+        try {
+            // Validate input
+            $validated = $request->validate([
+                'email' => 'required|email|exists:customers,email',
+                'password' => 'required|string|min:6|confirmed',
+            ]);
+
+            // Fetch customer using email
+            $customer = Customer::where('email', $validated['email'])->first();
+
+            if (!$customer) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Customer not found.',
+                ], 202);
+            }
+
+            // Check if OTP was verified
+            if (is_null($customer->otp_verified_at)) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'OTP not verified. Please verify OTP first.',
+                ], 202);
+            }
+
+            // Ensure reset is within 5 minutes of verification
+            if (now()->diffInMinutes($customer->otp_verified_at) > 5) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'OTP verification timed out. Please retry.',
+                ], 202);
+            }
+
+            // Reset password and clear otp_verified_at
+            $customer->password = bcrypt($validated['password']);
+            $customer->otp_verified_at = null;
+            $customer->save();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Password reset successfully.',
+            ],200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $firstMessage = collect($e->errors())->flatten()->first();
+
+            return response()->json([
+                'status' => false,
+                'message' => $firstMessage,
+            ], 202);
+        } catch (\Exception $e) {
+            \Log::error('Reset password error: ' . $e->getMessage());
+
+            return response()->json([
+                'status' => false,
+                'message' => 'Something went wrong. Please try again later.',
+            ], 202);
+        }
+    }
+
 
 
 

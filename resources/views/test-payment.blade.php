@@ -212,7 +212,7 @@
             console.log("Payload: ", payload);
 
             $.ajax({
-                // url: 'https://2dfe-49-43-99-214.ngrok-free.app/api/v1/checkout',
+                // url: 'https://admin.copperandcrumb.in/api/v1/checkout',
                 url: '{{ url('/api/v1/checkout') }}',
                 type: 'POST',
                 contentType: 'application/json',

@@ -451,7 +451,10 @@ class FrontendController extends Controller
 
     public function getAllCategories()
     {
-        $categories = ProductCategory::all();
+        $productsCategoryIds = Product::where('available_for', '!=', 'store')
+                                        ->pluck('category_id')
+                                        ->unique();
+        $categories = ProductCategory::whereIn('id',$productsCategoryIds)->get();
     
         $grouped = $categories->groupBy('parent_id');
     
